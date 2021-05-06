@@ -67,25 +67,31 @@ router.post(
       .withMessage('Password must be between 4 and 20 characters.'),
   ],
   validateRequest,
-  async (req: Request, res: Response) => {
-    const userCredentials: UserCredentials = req.body;
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userCredentials: UserCredentials = req.body;
 
-    console.log(userCredentials);
+      console.log(userCredentials);
 
-    throw new BadRequestError('User not found');
-    const user: User | undefined = await userService.signin(userCredentials);
+      const user: User | undefined = await userService.signin(userCredentials);
+      if (user === undefined) {
+        throw new BadRequestError('User not found');
+      }
 
-    // const { email } = user;
+      const { email } = user;
 
-    // const token = jwt.sign({ email }, process.env.JWT_SECRET!, {
-    //   expiresIn: '4h',
-    // });
+      // const token = jwt.sign({ email }, process.env.JWT_SECRET!, {
+      //   expiresIn: '4h',
+      // });
 
-    // res.cookie('jwt_encoded', token, {
-    //   maxAge: 4 * 60 * 60 * 1000,
-    // });
+      // res.cookie('jwt_encoded', token, {
+      //   maxAge: 4 * 60 * 60 * 1000,
+      // });
 
-    res.status(200).send({});
+      res.status(200).send({});
+    } catch (error) {
+      next(error);
+    }
   }
 );
 
