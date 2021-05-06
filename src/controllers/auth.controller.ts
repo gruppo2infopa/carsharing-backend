@@ -1,11 +1,13 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { User } from '../models/user.model';
+import { User, UserRole } from '../models/user.model';
 
 import jwt from 'jsonwebtoken';
 import { UserCredentials, UserDetails } from './dto/user.dto';
 import { UserService } from '../services/user.service';
 import { body } from 'express-validator';
 import { validateRequest } from '../middlewares/validate-request.handler';
+import { BadRequestError } from '../errors/bad-request.error';
+import { RequestValidationError } from '../errors/request-validation.error';
 
 const userService = UserService.getInstance();
 const router = Router();
@@ -32,14 +34,18 @@ router.post(
     body('phoneNumber')
       .isMobilePhone(['it-IT', 'en-US'])
       .withMessage('Phone number must be correct'),
+    body('userRole')
+      .default(UserRole.CUSTOMER)
+      .isIn(Object.keys(UserRole))
+      .withMessage('User Role not valid'),
   ],
   validateRequest,
-  (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const userDetails: UserDetails = req.body;
-    const user: User = userService.signup(userDetails);
-    const { email, id } = user;
+    const user: User = await userService.signup(userDetails);
+    const { email } = user;
 
-    const token = jwt.sign({ email, id }, process.env.JWT_SECRET!, {
+    const token = jwt.sign({ email }, process.env.JWT_SECRET!, {
       expiresIn: '4h',
     });
 
@@ -61,25 +67,29 @@ router.post(
       .withMessage('Password must be between 4 and 20 characters.'),
   ],
   validateRequest,
-  (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const userCredentials: UserCredentials = req.body;
 
-    const user: User = userService.signin(userCredentials);
-    const { email, id } = user;
+    console.log(userCredentials);
 
-    const token = jwt.sign({ email, id }, process.env.JWT_SECRET!, {
-      expiresIn: '4h',
-    });
+    throw new BadRequestError('User not found');
+    const user: User | undefined = await userService.signin(userCredentials);
 
-    res.cookie('jwt_encoded', token, {
-      maxAge: 4 * 60 * 60 * 1000,
-    });
+    // const { email } = user;
+
+    // const token = jwt.sign({ email }, process.env.JWT_SECRET!, {
+    //   expiresIn: '4h',
+    // });
+
+    // res.cookie('jwt_encoded', token, {
+    //   maxAge: 4 * 60 * 60 * 1000,
+    // });
 
     res.status(200).send({});
   }
 );
 
-router.post('/signout', (req: Request, res: Response, next: NextFunction) => {
+router.post('/signout', async (req: Request, res: Response) => {
   res.clearCookie('jwt_encoded');
 
   res.status(200).send({});

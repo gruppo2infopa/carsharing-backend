@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { AuthRouter } from './controllers/auth.controller';
 import cookieParser from 'cookie-parser';
 import { errorHandler } from './middlewares/error.handler';
+import { sequelize } from './config/db.config';
 
 const app = express();
 
@@ -21,10 +22,16 @@ app.use(errorHandler);
 
 const env = process.env;
 
-app.listen(env.PORT, () => {
-  if (!env.JWT_SECRET) {
-    console.error('Specify a JWT secret');
-    return;
-  }
-  console.log(`Listening on port ${env.PORT}`);
-});
+async function main() {
+  await sequelize.sync();
+
+  app.listen(env.PORT, () => {
+    if (!env.JWT_SECRET) {
+      console.error('Specify a JWT secret');
+      return;
+    }
+    console.log(`Listening on port ${env.PORT}`);
+  });
+}
+
+main();

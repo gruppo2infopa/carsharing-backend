@@ -1,8 +1,14 @@
 import { UserCredentials, UserDetails } from '../controllers/dto/user.dto';
 import { User, UserRole } from '../models/user.model';
+import { UserRepository } from '../repositories/user.repository';
+import {} from 'bcrypt';
+import { hashPassword } from '../utils/password';
+import { CustomError } from '../errors/custom.error';
+import { BadRequestError } from '../errors/bad-request.error';
 
 class UserService {
   private static instance: UserService;
+  private userRepository = UserRepository.getInstance();
 
   static getInstance(): UserService {
     if (!this.instance) {
@@ -12,8 +18,8 @@ class UserService {
     return this.instance;
   }
 
-  signup(userDetails: UserDetails): User {
-    const {
+  async signup(userDetails: UserDetails): Promise<User> {
+    let {
       email,
       password,
       name,
@@ -21,14 +27,13 @@ class UserService {
       birthDate,
       fiscalCode,
       phoneNumber,
+      userRole,
       driverLicense,
     } = userDetails;
 
-    // TODO: rendere il valore di customer come default e non hardcoded
-    const userRole = UserRole.CUSTOMER;
+    password = await hashPassword(password);
 
     const user: User = {
-      id: 0,
       email,
       password,
       name,
@@ -40,23 +45,15 @@ class UserService {
       driverLicense,
     };
 
-    return user;
+    const savedUser = await this.userRepository.saveUser(user);
+
+    return savedUser;
   }
 
-  signin(userCredentials: UserCredentials): User {
+  async signin(userCredentials: UserCredentials): Promise<User | undefined> {
     const { email, password } = userCredentials;
 
-    const user: User = {
-      id: 0,
-      email,
-      password,
-      name: '',
-      surname: '',
-      birthDate: new Date(),
-      fiscalCode: '',
-      phoneNumber: '',
-      userRole: UserRole.CUSTOMER,
-    };
+    const user: User | undefined = await this.userRepository.findUser(email);
 
     return user;
   }

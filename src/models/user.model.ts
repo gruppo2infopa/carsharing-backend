@@ -1,7 +1,6 @@
 import { DriverLicense } from './driver-license.model';
 
 interface User {
-  id: number;
   email: string;
   password: string;
   name: string;
@@ -14,10 +13,10 @@ interface User {
 }
 
 enum UserRole {
-  CUSTOMER,
-  DRIVER,
-  ATTENDANT,
-  COMPANY_ADMINISTRATOR,
+  CUSTOMER = 'CUSTOMER',
+  DRIVER = 'DRIVER',
+  ATTENDANT = 'ATTENDANT',
+  COMPANY_ADMINISTRATOR = 'COMPANY_ADMINISTRATOR',
 }
 
 export { User, UserRole };
