@@ -1,11 +1,6 @@
-import { Association, DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../../config/db.config';
-import {
-  DriverLicense,
-  DriverLicenseType,
-} from '../../models/driver-license.model';
-import { DriverLicenseModel } from './driver-license.db.model';
-import { UserModel } from './user.db.model';
+import { DriverLicenseType } from '../../models/driver-license.model';
 
 class DriverLicenseCategoryModel extends Model<{
   category: DriverLicenseType;

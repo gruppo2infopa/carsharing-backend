@@ -7,7 +7,6 @@ import { UserService } from '../services/user.service';
 import { body } from 'express-validator';
 import { validateRequest } from '../middlewares/validate-request.handler';
 import { BadRequestError } from '../errors/bad-request.error';
-import { RequestValidationError } from '../errors/request-validation.error';
 
 const userService = UserService.getInstance();
 const router = Router();

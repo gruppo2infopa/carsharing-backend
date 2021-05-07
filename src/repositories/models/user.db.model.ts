@@ -1,4 +1,4 @@
-import { Association, DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../../config/db.config';
 import { User, UserRole } from '../../models/user.model';
 import { DriverLicenseModel } from './driver-license.db.model';
@@ -6,7 +6,7 @@ import { DriverLicenseModel } from './driver-license.db.model';
 interface UserCreationAttributes extends Optional<User, 'email'> {}
 
 class UserModel extends Model<User, UserCreationAttributes> implements User {
-  public id!: number;
+  public id!: number; // TODO: delete field?
   public email!: string;
   public password!: string;
   public name!: string;

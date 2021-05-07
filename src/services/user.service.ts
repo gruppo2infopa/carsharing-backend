@@ -1,10 +1,8 @@
 import { UserCredentials, UserDetails } from '../controllers/dto/user.dto';
-import { User, UserRole } from '../models/user.model';
+import { User } from '../models/user.model';
 import { UserRepository } from '../repositories/user.repository';
 import {} from 'bcrypt';
 import { hashPassword } from '../utils/password';
-import { CustomError } from '../errors/custom.error';
-import { BadRequestError } from '../errors/bad-request.error';
 
 class UserService {
   private static instance: UserService;
@@ -52,6 +50,8 @@ class UserService {
 
   async signin(userCredentials: UserCredentials): Promise<User | undefined> {
     const { email, password } = userCredentials;
+
+    // TODO: check user credentials. Throw an expection if the password is wrong.
 
     const user: User | undefined = await this.userRepository.findUser(email);
 
