@@ -10,6 +10,8 @@ class UserService {
   private static instance: UserService;
   private userRepository = UserRepository.getInstance();
 
+  private constructor() {}
+
   static getInstance(): UserService {
     if (!this.instance) {
       this.instance = new UserService();
