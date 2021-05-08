@@ -1,9 +1,11 @@
-interface DriverLicense {
-  id: string;
-  issueDate: Date;
-  expiryDate: Date;
-  img: string; //path of the image
-  categories: DriverLicenseType[];
+class DriverLicense {
+  constructor(
+    public id: string,
+    public issueDate: Date,
+    public expiryDate: Date,
+    public img: string, //path of the image
+    public categories: DriverLicenseType[]
+  ) {}
 }
 
 enum DriverLicenseType {

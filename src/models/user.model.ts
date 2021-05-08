@@ -1,15 +1,17 @@
 import { DriverLicense } from './driver-license.model';
 
-interface User {
-  email: string;
-  password: string;
-  name: string;
-  surname: string;
-  birthDate: Date;
-  fiscalCode: string;
-  phoneNumber: string;
-  userRole: UserRole;
-  driverLicense?: DriverLicense;
+class User {
+  constructor(
+    public email: string,
+    public password: string,
+    public name: string,
+    public surname: string,
+    public birthDate: Date,
+    public fiscalCode: string,
+    public phoneNumber: string,
+    public userRole: UserRole,
+    public driverLicense?: DriverLicense
+  ) {}
 }
 
 enum UserRole {
