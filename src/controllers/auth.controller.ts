@@ -7,6 +7,20 @@ import { UserService } from '../services/user.service';
 import { body } from 'express-validator';
 import { validateRequest } from '../middlewares/validate-request.handler';
 
+// TODO: estrarre in un modulo a parte?
+const COOKIE_NAME: string = 'jwt_encoded';
+const TOKEN_MAX_AGE: number = 4 * 60 * 60 * 1000; // 4h
+
+function setResponseToken(res: Response, payload: object) {
+  const token = jwt.sign(payload, process.env.JWT_SECRET!, {
+    expiresIn: TOKEN_MAX_AGE,
+  });
+
+  res.cookie(COOKIE_NAME, token, {
+    maxAge: TOKEN_MAX_AGE,
+  });
+}
+
 const userService = UserService.getInstance();
 const router = Router();
 
@@ -38,17 +52,9 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userDetails: UserDetails = req.body;
-      const user: User = await userService.signup(userDetails);
-      const { email } = user;
+      const { email } = await userService.signup(userDetails);
 
-      const token = jwt.sign({ email }, process.env.JWT_SECRET!, {
-        expiresIn: '4h',
-      });
-
-      res.cookie('jwt_encoded', token, {
-        maxAge: 4 * 60 * 60 * 1000,
-      });
-
+      setResponseToken(res, { email });
       res.status(201).send({});
     } catch (error) {
       next(error);
@@ -69,17 +75,9 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userCredentials: UserCredentials = req.body;
-
       const { email } = await userService.signin(userCredentials);
 
-      const token = jwt.sign({ email }, process.env.JWT_SECRET!, {
-        expiresIn: '4h',
-      });
-
-      res.cookie('jwt_encoded', token, {
-        maxAge: 4 * 60 * 60 * 1000,
-      });
-
+      setResponseToken(res, { email });
       res.status(200).send({});
     } catch (error) {
       next(error);
@@ -88,8 +86,7 @@ router.post(
 );
 
 router.post('/signout', async (req: Request, res: Response) => {
-  res.clearCookie('jwt_encoded');
-
+  res.clearCookie(COOKIE_NAME);
   res.status(200).send({});
 });
 
