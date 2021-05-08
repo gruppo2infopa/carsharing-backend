@@ -2,7 +2,9 @@ import { UserCredentials, UserDetails } from '../controllers/dto/user.dto';
 import { User } from '../models/user.model';
 import { UserRepository } from '../repositories/user.repository';
 import {} from 'bcrypt';
-import { hashPassword } from '../utils/password';
+import { hashPassword, comparePasswords } from '../utils/password';
+import { UnauthorizedError } from '../errors/unauthorized.error';
+import { NotFoundError } from '../errors/not-found.error';
 
 class UserService {
   private static instance: UserService;
@@ -48,12 +50,14 @@ class UserService {
     return savedUser;
   }
 
-  async signin(userCredentials: UserCredentials): Promise<User | undefined> {
+  async signin(userCredentials: UserCredentials): Promise<User> {
     const { email, password } = userCredentials;
 
-    // TODO: check user credentials. Throw an expection if the password is wrong.
+    const user: User | null = await this.userRepository.findUser(email);
+    if (user == null) throw new NotFoundError('User not found');
 
-    const user: User | undefined = await this.userRepository.findUser(email);
+    const areEqual = await comparePasswords(password, user.password);
+    if (!areEqual) throw new UnauthorizedError('Invalid user credentials');
 
     return user;
   }

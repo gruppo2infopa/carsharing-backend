@@ -6,7 +6,6 @@ import { UserCredentials, UserDetails } from './dto/user.dto';
 import { UserService } from '../services/user.service';
 import { body } from 'express-validator';
 import { validateRequest } from '../middlewares/validate-request.handler';
-import { BadRequestError } from '../errors/bad-request.error';
 
 const userService = UserService.getInstance();
 const router = Router();
@@ -70,22 +69,15 @@ router.post(
     try {
       const userCredentials: UserCredentials = req.body;
 
-      console.log(userCredentials);
+      const { email } = await userService.signin(userCredentials);
 
-      const user: User | undefined = await userService.signin(userCredentials);
-      if (user === undefined) {
-        throw new BadRequestError('User not found');
-      }
+      const token = jwt.sign({ email }, process.env.JWT_SECRET!, {
+        expiresIn: '4h',
+      });
 
-      const { email } = user;
-
-      // const token = jwt.sign({ email }, process.env.JWT_SECRET!, {
-      //   expiresIn: '4h',
-      // });
-
-      // res.cookie('jwt_encoded', token, {
-      //   maxAge: 4 * 60 * 60 * 1000,
-      // });
+      res.cookie('jwt_encoded', token, {
+        maxAge: 4 * 60 * 60 * 1000,
+      });
 
       res.status(200).send({});
     } catch (error) {

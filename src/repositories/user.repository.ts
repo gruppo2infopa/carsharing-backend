@@ -16,8 +16,8 @@ class UserRepository {
     return await UserModel.create(user);
   }
 
-  async findUser(userEmail: string): Promise<User | undefined> {
-    return (await UserModel.findByPk(userEmail))?._attributes;
+  async findUser(userEmail: string): Promise<User | null> {
+    return await UserModel.findByPk(userEmail);
   }
 }
 
