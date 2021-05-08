@@ -6,7 +6,6 @@ import { DriverLicenseModel } from './driver-license.db.model';
 interface UserCreationAttributes extends Optional<User, 'email'> {}
 
 class UserModel extends Model<User, UserCreationAttributes> implements User {
-  public id!: number; // TODO: delete field?
   public email!: string;
   public password!: string;
   public name!: string;
@@ -18,10 +17,6 @@ class UserModel extends Model<User, UserCreationAttributes> implements User {
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
-
-  // public static assosiactions: {
-  //   driverLicense: Association<UserModel, DriverLicenseModel>;
-  // };
 }
 
 UserModel.init(

@@ -9,10 +9,6 @@ class DriverLicenseCategoryModel extends Model<{
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
-
-  // public static assosiactions: {
-  //   driverLicense: Association<UserModel, DriverLicenseModel>;
-  // };
 }
 
 DriverLicenseCategoryModel.init(

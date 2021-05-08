@@ -15,10 +15,6 @@ class DriverLicenseModel extends Model<DriverLicense> implements DriverLicense {
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
-
-  // public static assosiactions: {
-  //   driverLicense: Association<UserModel, DriverLicenseModel>;
-  // };
 }
 
 DriverLicenseModel.init(

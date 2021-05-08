@@ -38,20 +38,24 @@ router.post(
       .withMessage('User Role not valid'),
   ],
   validateRequest,
-  async (req: Request, res: Response) => {
-    const userDetails: UserDetails = req.body;
-    const user: User = await userService.signup(userDetails);
-    const { email } = user;
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userDetails: UserDetails = req.body;
+      const user: User = await userService.signup(userDetails);
+      const { email } = user;
 
-    const token = jwt.sign({ email }, process.env.JWT_SECRET!, {
-      expiresIn: '4h',
-    });
+      const token = jwt.sign({ email }, process.env.JWT_SECRET!, {
+        expiresIn: '4h',
+      });
 
-    res.cookie('jwt_encoded', token, {
-      maxAge: 4 * 60 * 60 * 1000,
-    });
+      res.cookie('jwt_encoded', token, {
+        maxAge: 4 * 60 * 60 * 1000,
+      });
 
-    res.status(201).send({});
+      res.status(201).send({});
+    } catch (error) {
+      next(error);
+    }
   }
 );
 
