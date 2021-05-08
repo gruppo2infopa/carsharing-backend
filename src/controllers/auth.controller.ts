@@ -32,10 +32,7 @@ router.post(
     body('phoneNumber')
       .isMobilePhone(['it-IT', 'en-US'])
       .withMessage('Phone number must be correct'),
-    body('userRole')
-      .default(UserRole.CUSTOMER)
-      .isIn(Object.keys(UserRole))
-      .withMessage('User Role not valid'),
+    body('userRole').default(UserRole.CUSTOMER),
   ],
   validateRequest,
   async (req: Request, res: Response, next: NextFunction) => {

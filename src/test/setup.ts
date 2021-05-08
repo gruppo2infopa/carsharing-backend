@@ -1,7 +1,10 @@
+import cookieParser from 'cookie-parser';
+import { app } from '../app';
 import { DbConfig } from '../config/db.config';
 
 beforeAll(async () => {
   await DbConfig.getInstance().sync();
+  app.use(cookieParser());
 });
 
 beforeEach(async () => {
