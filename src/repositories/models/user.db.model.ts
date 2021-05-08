@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../../config/db.config';
+import { DbConfig } from '../../config/db.config';
 import { User, UserRole } from '../../models/user.model';
 import { DriverLicenseModel } from './driver-license.db.model';
 
@@ -54,7 +54,7 @@ UserModel.init(
       allowNull: false,
     },
   },
-  { tableName: 'Users', sequelize }
+  { tableName: 'Users', sequelize: DbConfig.getInstance() }
 );
 
 UserModel.belongsTo(DriverLicenseModel);

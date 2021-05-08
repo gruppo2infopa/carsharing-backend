@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import { sequelize } from '../../config/db.config';
+import { DbConfig } from '../../config/db.config';
 import { DriverLicenseType } from '../../models/driver-license.model';
 
 class DriverLicenseCategoryModel extends Model<{
@@ -18,7 +18,10 @@ DriverLicenseCategoryModel.init(
       allowNull: false,
     },
   },
-  { tableName: 'Driver License Category', sequelize }
+  {
+    tableName: 'Driver License Category',
+    sequelize: DbConfig.getInstance(),
+  }
 );
 
 export { DriverLicenseCategoryModel };

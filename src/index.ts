@@ -6,7 +6,7 @@ import { AuthRouter } from './controllers/auth.controller';
 import { BookingRouter } from './controllers/booking.controller';
 import { VehicleRouter } from './controllers/vehicle.controller';
 import { errorHandler } from './middlewares/error.handler';
-import { sequelize } from './config/db.config';
+import { DbConfig } from './config/db.config';
 
 const app = express();
 
@@ -27,7 +27,7 @@ app.use(errorHandler);
 const env = process.env;
 
 async function main() {
-  await sequelize.sync();
+  await DbConfig.getInstance().sync();
 
   app.listen(env.PORT, () => {
     if (!env.JWT_SECRET) {

@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import { sequelize } from '../../config/db.config';
+import { DbConfig } from '../../config/db.config';
 import {
   DriverLicense,
   DriverLicenseType,
@@ -40,7 +40,7 @@ DriverLicenseModel.init(
       allowNull: false,
     },
   },
-  { tableName: 'DriverLicences', sequelize }
+  { tableName: 'DriverLicences', sequelize: DbConfig.getInstance() }
 );
 
 DriverLicenseModel.hasMany(DriverLicenseCategoryModel, {
