@@ -11,8 +11,8 @@ import { validateRequest } from '../middlewares/validate-request.handler';
 const COOKIE_NAME: string = 'jwt_encoded';
 const TOKEN_MAX_AGE: number = 4 * 60 * 60 * 1000; // 4h
 
-function setResponseToken(res: Response, payload: object) {
-  const token = jwt.sign(payload, process.env.JWT_SECRET!, {
+function setResponseToken(res: Response, tokenPayload: object) {
+  const token = jwt.sign(tokenPayload, process.env.JWT_SECRET!, {
     expiresIn: TOKEN_MAX_AGE,
   });
 
@@ -50,15 +50,11 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const userDetails: UserDetails = req.body;
-      const { email } = await userService.signup(userDetails);
+    const userDetails: UserDetails = req.body;
+    const { email } = await userService.signup(userDetails);
 
-      setResponseToken(res, { email });
-      res.status(201).send({});
-    } catch (error) {
-      next(error);
-    }
+    setResponseToken(res, { email });
+    res.status(201).send({});
   }
 );
 
@@ -73,15 +69,11 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const userCredentials: UserCredentials = req.body;
-      const { email } = await userService.signin(userCredentials);
+    const userCredentials: UserCredentials = req.body;
+    const { email } = await userService.signin(userCredentials);
 
-      setResponseToken(res, { email });
-      res.status(200).send({});
-    } catch (error) {
-      next(error);
-    }
+    setResponseToken(res, { email });
+    res.status(200).send({});
   }
 );
 

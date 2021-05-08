@@ -11,16 +11,11 @@ router.post(
   '/',
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { userEmail } = req.userToken!;
-      const vehicleInfo: VehicleInfo = req.body;
+    const { userEmail } = req.userToken!;
+    const vehicleInfo: VehicleInfo = req.body;
+    vehicleService.registerVehicle(userEmail, vehicleInfo);
 
-      vehicleService.registerVehicle(userEmail, vehicleInfo);
-
-      res.status(201).send({});
-    } catch (error) {
-      next(error);
-    }
+    res.status(201).send({});
   }
 );
 

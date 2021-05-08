@@ -16,17 +16,12 @@ router.post(
   '/',
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const bookingDetails: BookingDetails = req.body;
+    const bookingDetails: BookingDetails = req.body;
+    const availableVehicles: AvailableVehicles = await bookingService.createPendingBooking(
+      bookingDetails
+    );
 
-      const availableVehicles: AvailableVehicles = await bookingService.createPendingBooking(
-        bookingDetails
-      );
-
-      res.status(201).send(availableVehicles);
-    } catch (error) {
-      next(error);
-    }
+    res.status(201).send(availableVehicles);
   }
 );
 
@@ -35,18 +30,13 @@ router.put(
   '/:id/vehicle', // ??
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const vehicleDetails: VehicleDetails = req.body;
+    const vehicleDetails: VehicleDetails = req.body;
+    const totalPrice = await bookingService.updateBookingVehicle(
+      vehicleDetails
+    );
 
-      const totalPrice = await bookingService.updateBookingVehicle(
-        vehicleDetails
-      );
-
-      // return total booking price
-      res.status(200).send({ totalPrice }); // DTO anziché restituire un singolo valore?
-    } catch (error) {
-      next(error);
-    }
+    // return total booking price
+    res.status(200).send({ totalPrice }); // DTO anziché restituire un singolo valore?
   }
 );
 
@@ -55,18 +45,11 @@ router.put(
   '/:id/payment', // ??
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const paymentDetails: BookingPayment = req.body;
+    const paymentDetails: BookingPayment = req.body;
+    const vehicleUnlockCode = await bookingService.makePayment(paymentDetails);
 
-      const vehicleUnlockCode = await bookingService.makePayment(
-        paymentDetails
-      );
-
-      // restituire unlockCode del veicolo prenotato
-      res.status(200).send({ vehicleUnlockCode }); // DTO anziché restituire un singolo valore?
-    } catch (error) {
-      next(error);
-    }
+    // restituire unlockCode del veicolo prenotato
+    res.status(200).send({ vehicleUnlockCode }); // DTO anziché restituire un singolo valore?
   }
 );
 
@@ -75,15 +58,10 @@ router.delete(
   '/:id', // ??
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const bookingId: number = req.body;
+    const bookingId: number = req.body;
+    await bookingService.cancelBooking(bookingId);
 
-      await bookingService.cancelBooking(bookingId);
-
-      res.status(200).send({});
-    } catch (error) {
-      next(error);
-    }
+    res.status(200).send({});
   }
 );
 
@@ -92,14 +70,10 @@ router.get(
   '/',
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      // TODO: add code
+    // TODO: add code
 
-      // restituire tutti i booking
-      res.status(200).send({});
-    } catch (error) {
-      next(error);
-    }
+    // restituire tutti i booking
+    res.status(200).send({});
   }
 );
 
