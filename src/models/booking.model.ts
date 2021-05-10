@@ -1,17 +1,41 @@
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './user.model';
+import { Vehicle } from './vehicle.model';
 
-class Booking {
-  constructor(
-    public id: number,
-    public startDate: Date,
-    public endDate: Date,
-    public unlockCode: string,
-    public state: BookingState,
-    public rentType: RentType,
-    public user: User,
-    public driver?: User,
-    public finalDestination?: string
-  ) {}
+@Entity()
+ class Booking {
+    @PrimaryGeneratedColumn()
+    id: number;
+    
+    @Column('date')
+    startDate: Date;
+    
+    @Column('date')
+    endDate: Date;
+    
+    @Column()
+    unlockCode: string;
+    
+    @Column('text')
+    state: BookingState;
+    
+    @Column('text')
+    rentType: RentType;
+    
+    @Column()
+    finalDestination?: string;
+    
+    @ManyToOne(() => User, user => user.bookings)
+    user: User;
+    
+    @ManyToOne(() => User, user => user.bookings)
+    @JoinColumn()
+    driver?: User;
+    
+    @OneToOne(() => Vehicle, vehicle => vehicle.bookings)
+    @JoinColumn()
+    vehicle: Vehicle;
+
 }
 
 enum BookingState {
