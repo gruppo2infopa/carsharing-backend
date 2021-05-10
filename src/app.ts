@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import express, { json } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -5,8 +6,8 @@ import cookieParser from 'cookie-parser';
 import { AuthRouter } from './controllers/auth.controller';
 import { BookingRouter } from './controllers/booking.controller';
 import { VehicleRouter } from './controllers/vehicle.controller';
+import { UserRouter } from './controllers/user.controller';
 import { errorHandler } from './middlewares/error.handler';
-import { DbConfig } from './config/db.config';
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(cookieParser(undefined, {}));
 app.use('/auth', AuthRouter);
 app.use('/bookings', BookingRouter);
 app.use('/vehicles', VehicleRouter);
+app.use('/user', UserRouter);
 
 // Middlewares
 app.use(errorHandler);

@@ -1,5 +1,5 @@
+import { DriverLicense } from '../models/driver-license.model';
 import { User } from '../models/user.model';
-import { UserModel } from './models/user.db.model';
 
 class UserRepository {
   private static instance: UserRepository;
@@ -12,13 +12,11 @@ class UserRepository {
     return this.instance;
   }
 
-  async saveUser(user: User): Promise<User> {
-    return await UserModel.create(user);
-  }
+  async saveUser(user: User) {}
 
-  async findUser(userEmail: string): Promise<User | null> {
-    return await UserModel.findByPk(userEmail);
-  }
+  async findUser(userEmail: string) {}
+
+  async updateDriverLicense(driverLicense: DriverLicense, userEmail: string) {}
 }
 
 export { UserRepository };

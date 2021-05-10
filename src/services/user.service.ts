@@ -5,6 +5,7 @@ import {} from 'bcrypt';
 import { hashPassword, comparePasswords } from '../utils/password';
 import { UnauthorizedError } from '../errors/unauthorized.error';
 import { NotFoundError } from '../errors/not-found.error';
+import { UpdateUserDto } from '../controllers/dto/update-user.dto';
 
 class UserService {
   private static instance: UserService;
@@ -47,9 +48,7 @@ class UserService {
       driverLicense,
     };
 
-    const savedUser = await this.userRepository.saveUser(user);
-
-    return savedUser;
+    return this.userRepository.saveUser(user);
   }
 
   async signin(userCredentials: UserCredentials): Promise<User> {
@@ -62,6 +61,31 @@ class UserService {
     if (!areEqual) throw new UnauthorizedError('Invalid user credentials');
 
     return user;
+  }
+
+  async updateInfo(updateUserDto: UpdateUserDto): Promise<User> {
+    const { email, password, driverLicense, phoneNumber } = updateUserDto;
+    const foundUser = await this.userRepository.findUser(email);
+    console.log('[update]');
+
+    if (foundUser === null) throw new NotFoundError('User not found');
+
+    if (driverLicense) {
+      console.log('[driver-license]');
+
+      this.userRepository.updateDriverLicense(driverLicense, email);
+    }
+
+    if (phoneNumber) {
+      console.log('[phone-number]');
+      foundUser.phoneNumber = phoneNumber;
+    }
+    if (password) {
+      console.log('[password]');
+      foundUser.password = await hashPassword(password);
+    }
+
+    return foundUser.save();
   }
 }
 

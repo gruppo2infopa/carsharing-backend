@@ -9,11 +9,11 @@ class DriverLicense {
 }
 
 enum DriverLicenseType {
-  AM,
-  A1,
-  A2,
-  A,
-  B,
+  AM = 'AM',
+  A1 = 'A1',
+  A2 = 'A2',
+  A = 'A',
+  B = 'B',
 }
 
 export { DriverLicense, DriverLicenseType };
