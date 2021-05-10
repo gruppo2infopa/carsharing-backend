@@ -1,6 +1,6 @@
 import {
   CarInfo,
-  ElectricScooterInfo,
+  ElectricalScooterInfo,
   MotorbikeInfo,
   VehicleInfo,
 } from '../controllers/dto/vehicle.dto';
@@ -49,7 +49,7 @@ class VehicleService {
     } else if (type.toLowerCase() === 'bike') {
       vehicle = new Bike();
     } else {
-      const { autonomy } = vehicleInfo as ElectricScooterInfo;
+      const { autonomy } = vehicleInfo as ElectricalScooterInfo;
       vehicle = new ElectricalScooter(autonomy);
     }
 

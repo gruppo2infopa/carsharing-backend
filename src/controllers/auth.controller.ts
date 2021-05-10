@@ -51,9 +51,9 @@ router.post(
   validateRequest,
   async (req: Request, res: Response, next: NextFunction) => {
     const userDetails: UserDetails = req.body;
-    const { email } = await userService.signup(userDetails);
+    const { email, userRole } = await userService.signup(userDetails);
 
-    setResponseToken(res, { email });
+    setResponseToken(res, { email, userRole });
     res.status(201).send({});
   }
 );
@@ -70,9 +70,9 @@ router.post(
   validateRequest,
   async (req: Request, res: Response, next: NextFunction) => {
     const userCredentials: UserCredentials = req.body;
-    const { email } = await userService.signin(userCredentials);
+    const { email, userRole } = await userService.signin(userCredentials);
 
-    setResponseToken(res, { email });
+    setResponseToken(res, { email, userRole });
     res.status(200).send({});
   }
 );
