@@ -5,7 +5,7 @@ import { UserRole } from '../models/user.model';
 
 interface TokenPayload {
   email: string;
-  userRole: UserRole;
+  role: UserRole;
 }
 
 declare global {
@@ -28,7 +28,7 @@ export function requireAuth(userRoles: UserRole[] = [UserRole.CUSTOMER]) {
       throw new UnauthorizedError('Authentication required');
     }
 
-    if (!userRoles.includes(req.userToken.userRole))
+    if (!userRoles.includes(req.userToken.role))
       throw new UnauthorizedError('User not authorized');
 
     next();

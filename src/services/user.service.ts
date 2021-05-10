@@ -1,7 +1,6 @@
 import { UserCredentials, UserDetails } from '../controllers/dto/user.dto';
 import { User } from '../models/user.model';
 import { UserRepository } from '../repositories/user.repository';
-import {} from 'bcrypt';
 import { hashPassword, comparePasswords } from '../utils/password';
 import { UnauthorizedError } from '../errors/unauthorized.error';
 import { NotFoundError } from '../errors/not-found.error';
@@ -9,20 +8,9 @@ import { UpdateUserDto } from '../controllers/dto/update-user.dto';
 import { getConnection, getCustomRepository } from 'typeorm';
 
 class UserService {
-  private static instance: UserService;
-  private userRepository = getConnection().getCustomRepository(UserRepository);
+  private userRepository = getCustomRepository(UserRepository);
 
-  private constructor() {}
-
-  static getInstance(): UserService {
-    if (!this.instance) {
-      this.instance = new UserService();
-    }
-
-    return this.instance;
-  }
-
-  async signup(userDetails: UserDetails) {
+  async signup(userDetails: UserDetails): Promise<User> {
     let {
       email,
       password,
@@ -31,58 +19,50 @@ class UserService {
       birthDate,
       fiscalCode,
       phoneNumber,
-      userRole,
+      role,
       driverLicense,
     } = userDetails;
 
     password = await hashPassword(password);
 
-    // const user: User = {
-    //   email,
-    //   password,
-    //   name,
-    //   surname,
-    //   birthDate,
-    //   fiscalCode,
-    //   phoneNumber,
-    //   role,
-    //   driverLicense,
-    // };
+    const user: User = {
+      email,
+      password,
+      name,
+      surname,
+      birthDate,
+      fiscalCode,
+      phoneNumber,
+      role,
+      driverLicense,
+      bookings: [],
+    };
 
-    // return this.userRepository.saveUser(user);
+    return this.userRepository.save(user);
   }
 
-  async signin(userCredentials: UserCredentials) {
+  async signin(userCredentials: UserCredentials): Promise<User> {
     const { email, password } = userCredentials;
 
-    // const user: User | null = await this.userRepository.findUser(email);
-    // if (user == null) throw new NotFoundError('User not found');
+    const user: User | undefined = await this.userRepository.findOne(email);
+    if (user == null) throw new NotFoundError('User not found');
 
-    // const areEqual = await comparePasswords(password, user.password);
-    // if (!areEqual) throw new UnauthorizedError('Invalid user credentials');
+    const areEqual = await comparePasswords(password, user.password);
+    if (!areEqual) throw new UnauthorizedError('Invalid user credentials');
 
-    // return user;
+    return user;
   }
 
-  async updateInfo(updateUserDto: UpdateUserDto) {
-    // const { email, password, driverLicense, phoneNumber } = updateUserDto;
-    // const foundUser = await this.userRepository.findUser(email);
-    // console.log('[update]');
-    // if (foundUser === null) throw new NotFoundError('User not found');
-    // if (driverLicense) {
-    //   console.log('[driver-license]');
-    //   this.userRepository.updateDriverLicense(driverLicense, email);
-    // }
-    // if (phoneNumber) {
-    //   console.log('[phone-number]');
-    //   foundUser.phoneNumber = phoneNumber;
-    // }
-    // if (password) {
-    //   console.log('[password]');
-    //   foundUser.password = await hashPassword(password);
-    // }
-    // return foundUser.save();
+  async updateInfo(updateUserDto: UpdateUserDto): Promise<User> {
+    const { email } = updateUserDto;
+    if (updateUserDto.password) {
+      updateUserDto.password = await hashPassword(updateUserDto.password);
+    }
+
+    this.userRepository.update(email, updateUserDto);
+
+    return this.userRepository.findOneOrFail(email);
   }
 }
 
-export { UserService };
+export const userService = new UserService();

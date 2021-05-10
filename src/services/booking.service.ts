@@ -1,4 +1,5 @@
-import { getConnection, getCustomRepository } from 'typeorm';
+import { getCustomRepository } from 'typeorm';
+import { Booking } from '../models/booking.model';
 import {
   BookingSummary,
   AvailableVehicles,
@@ -9,19 +10,7 @@ import {
 import { BookingRepository } from '../repositories/booking.repository';
 
 class BookingService {
-  private static instance: BookingService;
-  private bookingRepository =
-    getConnection().getCustomRepository(BookingRepository);
-
-  private constructor() {}
-
-  static getInstance(): BookingService {
-    if (!this.instance) {
-      this.instance = new BookingService();
-    }
-
-    return this.instance;
-  }
+  private bookingRepository = getCustomRepository(BookingRepository);
 
   async createPendingBooking(
     bookingDetails: BookingDetails
@@ -30,6 +19,7 @@ class BookingService {
       bookingId: -1,
       availableVehicles: [],
     };
+
     return availableVehicles;
   }
 
@@ -53,4 +43,4 @@ class BookingService {
   }
 }
 
-export { BookingService };
+export const bookingService = new BookingService();

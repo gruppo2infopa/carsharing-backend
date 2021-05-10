@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Booking } from './booking.model';
 import { DriverLicenseType } from './driver-license.model';
 
+@Entity()
 export abstract class Vehicle {
   @PrimaryGeneratedColumn()
   id: number;

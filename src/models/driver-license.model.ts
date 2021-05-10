@@ -27,6 +27,7 @@ export class DriverLicenseType {
   public static readonly A: DriverLicenseType = new DriverLicenseType('A');
   public static readonly B: DriverLicenseType = new DriverLicenseType('B');
 
+  @PrimaryColumn()
   name: string;
 
   private constructor(name: string) {

@@ -1,5 +1,6 @@
 import { getConnection, getCustomRepository } from 'typeorm';
 import {
+  BikeInfo,
   CarInfo,
   ElectricalScooterInfo,
   MotorbikeInfo,
@@ -12,50 +13,33 @@ import {
   Motorbike,
   Vehicle,
 } from '../models/vehicle.model';
-import { VehicleRepository } from '../repositories/vehicle.repository';
-
-const connection = getConnection();
+import {
+  BikeRepository,
+  CarRepository,
+  ElectricalScooterRepository,
+  MotorbikeRepository,
+} from '../repositories/vehicle.repository';
 
 class VehicleService {
-  private static instance: VehicleService;
-  private vehicleRepository = connection.getCustomRepository(VehicleRepository);
-
-  private constructor() {}
-
-  static getInstance(): VehicleService {
-    if (!this.instance) {
-      this.instance = new VehicleService();
-    }
-
-    return this.instance;
-  }
+  private carRepository = getCustomRepository(CarRepository);
+  private motorbikeRepository = getCustomRepository(MotorbikeRepository);
+  private electricalScooterRepository = getCustomRepository(
+    ElectricalScooterRepository
+  );
+  private bikeRepository = getCustomRepository(BikeRepository);
 
   public registerVehicle(vehicleInfo: VehicleInfo) {
-    // const { type } = vehicleInfo;
-    // let vehicle: Vehicle;
-    // if (type.toLowerCase() === 'car') {
-    //   const {
-    //     autonomy,
-    //     displacement,
-    //     licensePlate,
-    //     seats,
-    //   } = vehicleInfo as CarInfo;
-    //   vehicle = new Car(licensePlate, autonomy, seats, displacement);
-    // } else if (type.toLowerCase() === 'motorbike') {
-    //   const {
-    //     autonomy,
-    //     displacement,
-    //     licensePlate,
-    //   } = vehicleInfo as MotorbikeInfo;
-    //   vehicle = new Motorbike(licensePlate, autonomy, displacement);
-    // } else if (type.toLowerCase() === 'bike') {
-    //   vehicle = new Bike();
-    // } else {
-    //   const { autonomy } = vehicleInfo as ElectricalScooterInfo;
-    //   vehicle = new ElectricalScooter(autonomy);
-    // }
-    // this.vehicleRepository.saveVehicle(vehicle);
+    const { type } = vehicleInfo;
+    if (type.toUpperCase() === 'CAR') {
+      this.carRepository.save(vehicleInfo);
+    } else if (type.toUpperCase() === 'MOTORBIKE') {
+      this.motorbikeRepository.save(vehicleInfo);
+    } else if (type.toUpperCase() === 'BIKE') {
+      this.bikeRepository.save(vehicleInfo);
+    } else if (type.toUpperCase() === 'ELECTRICALSCOOTER') {
+      this.carRepository.save(vehicleInfo);
+    }
   }
 }
 
-export { VehicleService };
+export const vehicleService = new VehicleService();

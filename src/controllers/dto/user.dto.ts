@@ -9,7 +9,7 @@ interface UserDetails {
   birthDate: Date;
   fiscalCode: string;
   phoneNumber: string;
-  userRole: UserRole;
+  role: UserRole;
   driverLicense?: DriverLicense;
 }
 

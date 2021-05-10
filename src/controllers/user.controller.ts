@@ -1,10 +1,9 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { requireAuth } from '../middlewares/require-auth.handler';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserService } from '../services/user.service';
+import { userService } from '../services/user.service';
 import { UserRole } from '../models/user.model';
 
-const userService = UserService.getInstance();
 const router = Router();
 
 // registerVehicle

@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { BookingService } from '../services/booking.service';
+import { bookingService } from '../services/booking.service';
 import { requireAuth } from '../middlewares/require-auth.handler';
 import {
   AvailableVehicles,
@@ -8,7 +8,6 @@ import {
   VehicleDetails,
 } from './dto/booking.dto';
 
-const bookingService = BookingService.getInstance();
 const router = Router();
 
 // makeNewBooking
@@ -17,9 +16,8 @@ router.post(
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     const bookingDetails: BookingDetails = req.body;
-    const availableVehicles: AvailableVehicles = await bookingService.createPendingBooking(
-      bookingDetails
-    );
+    const availableVehicles: AvailableVehicles =
+      await bookingService.createPendingBooking(bookingDetails);
 
     res.status(201).send(availableVehicles);
   }

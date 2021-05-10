@@ -3,7 +3,7 @@ import { User, UserRole } from '../models/user.model';
 
 import jwt from 'jsonwebtoken';
 import { UserCredentials, UserDetails } from './dto/user.dto';
-import { UserService } from '../services/user.service';
+import { userService } from '../services/user.service';
 import { body } from 'express-validator';
 import { validateRequest } from '../middlewares/validate-request.handler';
 
@@ -20,8 +20,6 @@ function setResponseToken(res: Response, tokenPayload: object) {
     maxAge: TOKEN_MAX_AGE,
   });
 }
-
-const userService = UserService.getInstance();
 const router = Router();
 
 router.post(
@@ -46,14 +44,14 @@ router.post(
     body('phoneNumber')
       .isMobilePhone(['it-IT', 'en-US'])
       .withMessage('Phone number must be correct'),
-    body('userRole').default(UserRole.CUSTOMER),
+    body('role').default(UserRole.CUSTOMER),
   ],
   validateRequest,
   async (req: Request, res: Response, next: NextFunction) => {
     const userDetails: UserDetails = req.body;
-    // const { email, role } = await userService.signup(userDetails);
+    const { email, role } = await userService.signup(userDetails);
 
-    // setResponseToken(res, { email, role });
+    setResponseToken(res, { email, role });
     res.status(201).send({});
   }
 );
@@ -70,9 +68,9 @@ router.post(
   validateRequest,
   async (req: Request, res: Response, next: NextFunction) => {
     const userCredentials: UserCredentials = req.body;
-    // const { email, role } = await userService.signin(userCredentials);
+    const { email, role } = await userService.signin(userCredentials);
 
-    // setResponseToken(res, { email, role });
+    setResponseToken(res, { email, role });
     res.status(200).send({});
   }
 );

@@ -1,26 +1,26 @@
+import { Booking } from '../../models/booking.model';
 import { Requirement } from '../../models/vehicle.model';
 
-interface VehicleInfo {
+export class VehicleInfo {
   type: string;
+  bookings: Booking[] = [];
 }
 
-interface CarInfo extends VehicleInfo {
+export class CarInfo extends VehicleInfo {
   licensePlate: string;
   autonomy: number;
   seats: number;
   displacement: number;
 }
 
-interface MotorbikeInfo extends VehicleInfo {
+export class MotorbikeInfo extends VehicleInfo {
   licensePlate: string;
   autonomy: number;
   displacement: number;
 }
 
-interface ElectricalScooterInfo extends VehicleInfo {
+export class ElectricalScooterInfo extends VehicleInfo {
   autonomy: number;
 }
 
-interface BikeInfo extends VehicleInfo {} // ???
-
-export { VehicleInfo, CarInfo, MotorbikeInfo, ElectricalScooterInfo, BikeInfo };
+export class BikeInfo extends VehicleInfo {} // ???
