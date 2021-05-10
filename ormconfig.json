@@ -1,0 +1,6 @@
+{
+  "type": "sqlite",
+  "database": "db/dbname.db",
+  "entities": ["src/models/**/*.ts"],
+  "logging": true
+}

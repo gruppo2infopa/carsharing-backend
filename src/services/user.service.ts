@@ -6,10 +6,11 @@ import { hashPassword, comparePasswords } from '../utils/password';
 import { UnauthorizedError } from '../errors/unauthorized.error';
 import { NotFoundError } from '../errors/not-found.error';
 import { UpdateUserDto } from '../controllers/dto/update-user.dto';
+import { getConnection, getCustomRepository } from 'typeorm';
 
 class UserService {
   private static instance: UserService;
-  private userRepository = UserRepository.getInstance();
+  private userRepository = getConnection().getCustomRepository(UserRepository);
 
   private constructor() {}
 
@@ -21,7 +22,7 @@ class UserService {
     return this.instance;
   }
 
-  async signup(userDetails: UserDetails): Promise<User> {
+  async signup(userDetails: UserDetails) {
     let {
       email,
       password,
@@ -36,56 +37,51 @@ class UserService {
 
     password = await hashPassword(password);
 
-    const user: User = {
-      email,
-      password,
-      name,
-      surname,
-      birthDate,
-      fiscalCode,
-      phoneNumber,
-      userRole,
-      driverLicense,
-    };
+    // const user: User = {
+    //   email,
+    //   password,
+    //   name,
+    //   surname,
+    //   birthDate,
+    //   fiscalCode,
+    //   phoneNumber,
+    //   role,
+    //   driverLicense,
+    // };
 
-    return this.userRepository.saveUser(user);
+    // return this.userRepository.saveUser(user);
   }
 
-  async signin(userCredentials: UserCredentials): Promise<User> {
+  async signin(userCredentials: UserCredentials) {
     const { email, password } = userCredentials;
 
-    const user: User | null = await this.userRepository.findUser(email);
-    if (user == null) throw new NotFoundError('User not found');
+    // const user: User | null = await this.userRepository.findUser(email);
+    // if (user == null) throw new NotFoundError('User not found');
 
-    const areEqual = await comparePasswords(password, user.password);
-    if (!areEqual) throw new UnauthorizedError('Invalid user credentials');
+    // const areEqual = await comparePasswords(password, user.password);
+    // if (!areEqual) throw new UnauthorizedError('Invalid user credentials');
 
-    return user;
+    // return user;
   }
 
-  async updateInfo(updateUserDto: UpdateUserDto): Promise<User> {
-    const { email, password, driverLicense, phoneNumber } = updateUserDto;
-    const foundUser = await this.userRepository.findUser(email);
-    console.log('[update]');
-
-    if (foundUser === null) throw new NotFoundError('User not found');
-
-    if (driverLicense) {
-      console.log('[driver-license]');
-
-      this.userRepository.updateDriverLicense(driverLicense, email);
-    }
-
-    if (phoneNumber) {
-      console.log('[phone-number]');
-      foundUser.phoneNumber = phoneNumber;
-    }
-    if (password) {
-      console.log('[password]');
-      foundUser.password = await hashPassword(password);
-    }
-
-    return foundUser.save();
+  async updateInfo(updateUserDto: UpdateUserDto) {
+    // const { email, password, driverLicense, phoneNumber } = updateUserDto;
+    // const foundUser = await this.userRepository.findUser(email);
+    // console.log('[update]');
+    // if (foundUser === null) throw new NotFoundError('User not found');
+    // if (driverLicense) {
+    //   console.log('[driver-license]');
+    //   this.userRepository.updateDriverLicense(driverLicense, email);
+    // }
+    // if (phoneNumber) {
+    //   console.log('[phone-number]');
+    //   foundUser.phoneNumber = phoneNumber;
+    // }
+    // if (password) {
+    //   console.log('[password]');
+    //   foundUser.password = await hashPassword(password);
+    // }
+    // return foundUser.save();
   }
 }
 

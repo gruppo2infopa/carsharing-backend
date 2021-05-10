@@ -1,3 +1,4 @@
+import { getConnection, getCustomRepository } from 'typeorm';
 import {
   BookingSummary,
   AvailableVehicles,
@@ -5,9 +6,12 @@ import {
   BookingPayment,
   VehicleDetails,
 } from '../controllers/dto/booking.dto';
+import { BookingRepository } from '../repositories/booking.repository';
 
 class BookingService {
   private static instance: BookingService;
+  private bookingRepository =
+    getConnection().getCustomRepository(BookingRepository);
 
   private constructor() {}
 

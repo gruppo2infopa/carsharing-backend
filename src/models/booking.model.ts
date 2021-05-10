@@ -1,41 +1,46 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from './user.model';
 import { Vehicle } from './vehicle.model';
 
 @Entity()
- class Booking {
-    @PrimaryGeneratedColumn()
-    id: number;
-    
-    @Column('date')
-    startDate: Date;
-    
-    @Column('date')
-    endDate: Date;
-    
-    @Column()
-    unlockCode: string;
-    
-    @Column('text')
-    state: BookingState;
-    
-    @Column('text')
-    rentType: RentType;
-    
-    @Column()
-    finalDestination?: string;
-    
-    @ManyToOne(() => User, user => user.bookings)
-    user: User;
-    
-    @ManyToOne(() => User, user => user.bookings)
-    @JoinColumn()
-    driver?: User;
-    
-    @OneToOne(() => Vehicle, vehicle => vehicle.bookings)
-    @JoinColumn()
-    vehicle: Vehicle;
+class Booking {
+  @PrimaryGeneratedColumn()
+  id: number;
 
+  @Column('date')
+  startDate: Date;
+
+  @Column('date')
+  endDate: Date;
+
+  @Column()
+  unlockCode: string;
+
+  @Column('text')
+  state: BookingState;
+
+  @Column('text')
+  rentType: RentType;
+
+  @Column()
+  finalDestination?: string;
+
+  @ManyToOne(() => User, (user) => user.bookings)
+  user: User;
+
+  @ManyToOne(() => User, (user) => user.bookings)
+  driver?: User;
+
+  @ManyToOne(() => Vehicle, (vehicle) => vehicle.bookings)
+  vehicle: Vehicle;
 }
 
 enum BookingState {

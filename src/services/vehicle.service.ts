@@ -1,3 +1,4 @@
+import { getConnection, getCustomRepository } from 'typeorm';
 import {
   CarInfo,
   ElectricalScooterInfo,
@@ -13,9 +14,11 @@ import {
 } from '../models/vehicle.model';
 import { VehicleRepository } from '../repositories/vehicle.repository';
 
+const connection = getConnection();
+
 class VehicleService {
   private static instance: VehicleService;
-  private vehicleRepository = VehicleRepository.getInstance();
+  private vehicleRepository = connection.getCustomRepository(VehicleRepository);
 
   private constructor() {}
 
@@ -28,32 +31,30 @@ class VehicleService {
   }
 
   public registerVehicle(vehicleInfo: VehicleInfo) {
-    const { type } = vehicleInfo;
-
-    let vehicle: Vehicle;
-    if (type.toLowerCase() === 'car') {
-      const {
-        autonomy,
-        displacement,
-        licensePlate,
-        seats,
-      } = vehicleInfo as CarInfo;
-      vehicle = new Car(licensePlate, autonomy, seats, displacement);
-    } else if (type.toLowerCase() === 'motorbike') {
-      const {
-        autonomy,
-        displacement,
-        licensePlate,
-      } = vehicleInfo as MotorbikeInfo;
-      vehicle = new Motorbike(licensePlate, autonomy, displacement);
-    } else if (type.toLowerCase() === 'bike') {
-      vehicle = new Bike();
-    } else {
-      const { autonomy } = vehicleInfo as ElectricalScooterInfo;
-      vehicle = new ElectricalScooter(autonomy);
-    }
-
-    this.vehicleRepository.saveVehicle(vehicle);
+    // const { type } = vehicleInfo;
+    // let vehicle: Vehicle;
+    // if (type.toLowerCase() === 'car') {
+    //   const {
+    //     autonomy,
+    //     displacement,
+    //     licensePlate,
+    //     seats,
+    //   } = vehicleInfo as CarInfo;
+    //   vehicle = new Car(licensePlate, autonomy, seats, displacement);
+    // } else if (type.toLowerCase() === 'motorbike') {
+    //   const {
+    //     autonomy,
+    //     displacement,
+    //     licensePlate,
+    //   } = vehicleInfo as MotorbikeInfo;
+    //   vehicle = new Motorbike(licensePlate, autonomy, displacement);
+    // } else if (type.toLowerCase() === 'bike') {
+    //   vehicle = new Bike();
+    // } else {
+    //   const { autonomy } = vehicleInfo as ElectricalScooterInfo;
+    //   vehicle = new ElectricalScooter(autonomy);
+    // }
+    // this.vehicleRepository.saveVehicle(vehicle);
   }
 }
 

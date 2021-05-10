@@ -1,3 +1,4 @@
+import { createConnection } from 'typeorm';
 import { app } from './app';
 
 async function main() {

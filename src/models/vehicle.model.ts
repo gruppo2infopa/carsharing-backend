@@ -1,9 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Booking } from './booking.model';
 import { DriverLicenseType } from './driver-license.model';
 
 export abstract class Vehicle {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @OneToMany(() => Booking, (booking) => booking.vehicle)
+  bookings: Booking[];
 
   public abstract getRequirement(): Requirement;
 }
