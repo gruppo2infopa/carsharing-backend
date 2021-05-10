@@ -1,8 +1,12 @@
+import { Column, Entity, PrimaryColumn } from 'typeorm';
+
+@Entity()
 class Payment {
-  constructor(
-    public amount: number,
-    public reference: string /*public creditCard: CreditCard*/ // string??
-  ) {}
+  @Column()
+  amount: number;
+
+  @PrimaryColumn()
+  reference: string;
 }
 
 export { Payment };
