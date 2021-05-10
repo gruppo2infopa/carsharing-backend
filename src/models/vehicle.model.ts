@@ -1,20 +1,20 @@
 import { DriverLicenseType } from './driver-license.model';
 
 abstract class Vehicle {
-  constructor(public id: number) {}
+  id?: number;
+  constructor() {}
 
   public abstract getRequirement(): Requirement;
 }
 
 class Car extends Vehicle {
   constructor(
-    id: number,
     public licensePlate: string,
     public autonomy: number,
     public seats: number,
     public displacement: number
   ) {
-    super(id);
+    super();
   }
 
   public getRequirement(): Requirement {
@@ -26,8 +26,8 @@ class Car extends Vehicle {
 }
 
 class ElectricalScooter extends Vehicle {
-  constructor(id: number, public autonomy: number) {
-    super(id);
+  constructor(public autonomy: number) {
+    super();
   }
 
   public getRequirement(): Requirement {
@@ -38,12 +38,11 @@ class ElectricalScooter extends Vehicle {
 
 class Motorbike extends Vehicle {
   constructor(
-    id: number,
     public licensePlate: string,
     public autonomy: number,
     public displacement: number
   ) {
-    super(id);
+    super();
   }
 
   public getRequirement(): Requirement {
@@ -53,8 +52,8 @@ class Motorbike extends Vehicle {
 }
 
 class Bike extends Vehicle {
-  constructor(id: number) {
-    super(id);
+  constructor() {
+    super();
   }
 
   public getRequirement(): Requirement {

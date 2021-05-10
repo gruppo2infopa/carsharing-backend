@@ -57,6 +57,6 @@ UserModel.init(
   { tableName: 'Users', sequelize: DbConfig.getInstance() }
 );
 
-UserModel.belongsTo(DriverLicenseModel);
+UserModel.belongsTo(DriverLicenseModel, { onDelete: 'CASCADE' });
 
 export { UserModel };

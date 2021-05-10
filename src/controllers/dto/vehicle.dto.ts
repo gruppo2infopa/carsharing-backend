@@ -1,8 +1,7 @@
 import { Requirement } from '../../models/vehicle.model';
 
 interface VehicleInfo {
-  //type: string; ????
-  requirement: Requirement;
+  type: string;
 }
 
 interface CarInfo extends VehicleInfo {

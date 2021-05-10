@@ -11,9 +11,8 @@ router.post(
   '/',
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
-    const { userEmail } = req.userToken!;
     const vehicleInfo: VehicleInfo = req.body;
-    vehicleService.registerVehicle(userEmail, vehicleInfo);
+    vehicleService.registerVehicle(vehicleInfo);
 
     res.status(201).send({});
   }
