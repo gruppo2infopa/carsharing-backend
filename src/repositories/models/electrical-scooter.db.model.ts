@@ -27,7 +27,7 @@ export interface ElectricalScooterAttr {
         allowNull: false,
       },
     },
-    { tableName: 'EletricalScooters', sequelize: DbConfig.getInstance() }
+    { tableName: 'ElectricalScooters', sequelize: DbConfig.getInstance() }
   );
   
   ElectricalScooterModel.belongsTo(VehicleModel, {
