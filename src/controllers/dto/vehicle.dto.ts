@@ -17,10 +17,10 @@ interface MotorbikeInfo extends VehicleInfo {
   displacement: number;
 }
 
-interface ElectricScooterInfo extends VehicleInfo {
+interface ElectricalScooterInfo extends VehicleInfo {
   autonomy: number;
 }
 
 interface BikeInfo extends VehicleInfo {} // ???
 
-export { VehicleInfo, CarInfo, MotorbikeInfo, ElectricScooterInfo, BikeInfo };
+export { VehicleInfo, CarInfo, MotorbikeInfo, ElectricalScooterInfo, BikeInfo };
