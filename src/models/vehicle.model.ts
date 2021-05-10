@@ -1,21 +1,26 @@
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { DriverLicenseType } from './driver-license.model';
 
-abstract class Vehicle {
-  id?: number;
-  constructor() {}
+export abstract class Vehicle {
+  @PrimaryGeneratedColumn()
+  id: number;
 
   public abstract getRequirement(): Requirement;
 }
 
-class Car extends Vehicle {
-  constructor(
-    public licensePlate: string,
-    public autonomy: number,
-    public seats: number,
-    public displacement: number
-  ) {
-    super();
-  }
+@Entity()
+export class Car extends Vehicle {
+  @Column()
+  licensePlate: string;
+
+  @Column()
+  autonomy: number;
+
+  @Column()
+  seats: number;
+
+  @Column()
+  displacement: number;
 
   public getRequirement(): Requirement {
     // TODO: cambiare con i valori corretti
@@ -25,10 +30,10 @@ class Car extends Vehicle {
   }
 }
 
-class ElectricalScooter extends Vehicle {
-  constructor(public autonomy: number) {
-    super();
-  }
+@Entity()
+export class ElectricalScooter extends Vehicle {
+  @Column()
+  autonomy: number;
 
   public getRequirement(): Requirement {
     // TODO: cambiare con i valori corretti
@@ -36,14 +41,16 @@ class ElectricalScooter extends Vehicle {
   }
 }
 
-class Motorbike extends Vehicle {
-  constructor(
-    public licensePlate: string,
-    public autonomy: number,
-    public displacement: number
-  ) {
-    super();
-  }
+@Entity()
+export class Motorbike extends Vehicle {
+  @Column()
+  licensePlate: string;
+
+  @Column()
+  autonomy: number;
+
+  @Column()
+  displacement: number;
 
   public getRequirement(): Requirement {
     // TODO: cambiare con i valori corretti
@@ -51,20 +58,15 @@ class Motorbike extends Vehicle {
   }
 }
 
-class Bike extends Vehicle {
-  constructor() {
-    super();
-  }
-
+@Entity()
+export class Bike extends Vehicle {
   public getRequirement(): Requirement {
     // TODO: cambiare con i valori corretti
     return { minimumAge: 21, driverLicenseType: DriverLicenseType.A2 };
   }
 }
 
-interface Requirement {
+export interface Requirement {
   minimumAge: number;
   driverLicenseType: DriverLicenseType | null;
 }
-
-export { Vehicle, Car, ElectricalScooter, Motorbike, Bike, Requirement };

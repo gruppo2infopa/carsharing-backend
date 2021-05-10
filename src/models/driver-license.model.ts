@@ -1,19 +1,35 @@
-class DriverLicense {
-  constructor(
-    public id: string,
-    public issueDate: Date,
-    public expiryDate: Date,
-    public img: string, //path of the image
-    public categories: DriverLicenseType[]
-  ) {}
+import { Column, Entity, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm';
+
+@Entity()
+export class DriverLicense {
+  @PrimaryColumn()
+  id: string;
+
+  @Column()
+  issueDate: Date;
+
+  @Column()
+  expiryDate: Date;
+
+  @Column()
+  img: string; //path of the image
+
+  @Column('text')
+  @ManyToMany(() => DriverLicenseType)
+  categories: DriverLicenseType[];
 }
 
-enum DriverLicenseType {
-  AM = 'AM',
-  A1 = 'A1',
-  A2 = 'A2',
-  A = 'A',
-  B = 'B',
-}
+@Entity()
+export class DriverLicenseType {
+  public static readonly AM: DriverLicenseType = new DriverLicenseType('AM');
+  public static readonly A1: DriverLicenseType = new DriverLicenseType('A1');
+  public static readonly A2: DriverLicenseType = new DriverLicenseType('A2');
+  public static readonly A: DriverLicenseType = new DriverLicenseType('A');
+  public static readonly B: DriverLicenseType = new DriverLicenseType('B');
 
-export { DriverLicense, DriverLicenseType };
+  name: string;
+
+  private constructor(name: string) {
+    this.name = name;
+  }
+}
