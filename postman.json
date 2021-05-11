@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"mario.rossi@gmail.com\",\n    \"password\": \"mariorossi\",\n    \"name\": \"Mario\",\n    \"surname\": \"Rossi\",\n    \"birthDate\": \"1980-12-12\",\n    \"fiscalCode\": \"CRFGTH4591AER413\",\n    \"phoneNumber\": \"3333333333\"\n}",
+							"raw": "{\n    \"email\": \"mario.rossi@gmail.com\",\n    \"password\": \"mariorossi\",\n    \"name\": \"Mario\",\n    \"surname\": \"Rossi\",\n    \"birthDate\": \"1980-12-12\",\n    \"fiscalCode\": \"CRFGTH4591AER413\",\n    \"phoneNumber\": \"3333333333\",\n    \"driverLicense\": {\n        \"id\": \"abcd1234\",\n        \"issueDate\": \"2012-12-12\",\n        \"expiryDate\": \"2022-12-12\",\n        \"categories\": [{\"name\": \"A\"}],\n        \"img\": \"/path/to/img\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -251,7 +251,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"password\": \"mariorossi\",\n    \"phoneNumber\": \"3333333333\"\n}",
+							"raw": "{\n    \"phoneNumber\": \"123456789\",\n    \"driverLicense\": {\n        \"id\": \"abcd1234\",\n        \"issueDate\": \"2015-12-12\",\n        \"expiryDate\": \"2025-12-12\",\n        \"img\": \"/path/to/img\",\n        \"categories\": [\n            {\"name\": \"A\"},\n            {\"name\": \"B\"},\n            {\"name\": \"A1\"}\n        ]\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"

@@ -41,12 +41,13 @@ class UserService {
     email: string,
     updateUserDto: UpdateUserDto
   ): Promise<User | undefined> {
+    let user = await this.userRepository.findOne(email);
     if (updateUserDto.password) {
       updateUserDto.password = await hashPassword(updateUserDto.password);
     }
 
-    this.userRepository.update(email, updateUserDto);
-    return this.userRepository.findOne(email); // FIXME: Lanciare NotFoundError? che eccezione lancia?
+    user = { ...user!, ...updateUserDto };
+    return this.userRepository.save(user);
   }
 }
 

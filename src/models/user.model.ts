@@ -38,7 +38,9 @@ class User {
   @OneToMany(() => Booking, (booking) => booking.user)
   bookings: Booking[];
 
-  @OneToOne((type) => DriverLicense)
+  @OneToOne(() => DriverLicense, (driverLicense) => driverLicense.user, {
+    cascade: true,
+  })
   @JoinColumn()
   driverLicense?: DriverLicense;
 }

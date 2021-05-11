@@ -18,13 +18,13 @@ export class Car extends Vehicle {
   @Column()
   licensePlate: string;
 
-  @Column()
+  @Column('float')
   autonomy: number;
 
   @Column()
   seats: number;
 
-  @Column()
+  @Column('float')
   displacement: number;
 
   public getRequirement(): Requirement {
@@ -51,10 +51,10 @@ export class Motorbike extends Vehicle {
   @Column()
   licensePlate: string;
 
-  @Column()
+  @Column('float')
   autonomy: number;
 
-  @Column()
+  @Column('float')
   displacement: number;
 
   public getRequirement(): Requirement {

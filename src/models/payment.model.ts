@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
 class Payment {
-  @Column()
+  @Column('float')
   amount: number;
 
   @PrimaryColumn()
