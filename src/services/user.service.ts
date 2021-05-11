@@ -5,38 +5,14 @@ import { hashPassword, comparePasswords } from '../utils/password';
 import { UnauthorizedError } from '../errors/unauthorized.error';
 import { NotFoundError } from '../errors/not-found.error';
 import { UpdateUserDto } from '../controllers/dto/update-user.dto';
-import { getConnection, getCustomRepository } from 'typeorm';
+import { getCustomRepository } from 'typeorm';
 
 class UserService {
   private userRepository = getCustomRepository(UserRepository);
 
   async signup(userDetails: UserDetails): Promise<User> {
-    let {
-      email,
-      password,
-      name,
-      surname,
-      birthDate,
-      fiscalCode,
-      phoneNumber,
-      role,
-      driverLicense,
-    } = userDetails;
-
-    password = await hashPassword(password);
-
-    const user: User = {
-      email,
-      password,
-      name,
-      surname,
-      birthDate,
-      fiscalCode,
-      phoneNumber,
-      role,
-      driverLicense,
-      bookings: [],
-    };
+    const user: User = { ...userDetails, bookings: [] };
+    user.password = await hashPassword(user.password);
 
     return this.userRepository.save(user);
   }
@@ -45,7 +21,7 @@ class UserService {
     const { email, password } = userCredentials;
 
     const user: User | undefined = await this.userRepository.findOne(email);
-    if (user == null) throw new NotFoundError('User not found');
+    if (user === undefined) throw new NotFoundError('User not found');
 
     const areEqual = await comparePasswords(password, user.password);
     if (!areEqual) throw new UnauthorizedError('Invalid user credentials');
@@ -60,8 +36,7 @@ class UserService {
     }
 
     this.userRepository.update(email, updateUserDto);
-
-    return this.userRepository.findOneOrFail(email);
+    return this.userRepository.findOneOrFail(email); // FIXME: Lanciare NotFoundError? che eccezione lancia?
   }
 }
 

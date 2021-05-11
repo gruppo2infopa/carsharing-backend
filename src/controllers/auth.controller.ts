@@ -1,5 +1,5 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { User, UserRole } from '../models/user.model';
+import { Router, Request, Response } from 'express';
+import { UserRole } from '../models/user.model';
 
 import jwt from 'jsonwebtoken';
 import { UserCredentials, UserDetails } from './dto/user.dto';
@@ -47,7 +47,7 @@ router.post(
     body('role').default(UserRole.CUSTOMER),
   ],
   validateRequest,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const userDetails: UserDetails = req.body;
     const { email, role } = await userService.signup(userDetails);
 
@@ -66,7 +66,7 @@ router.post(
       .withMessage('Password must be between 4 and 20 characters.'),
   ],
   validateRequest,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const userCredentials: UserCredentials = req.body;
     const { email, role } = await userService.signin(userCredentials);
 
