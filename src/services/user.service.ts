@@ -37,14 +37,16 @@ class UserService {
     return user;
   }
 
-  async updateInfo(updateUserDto: UpdateUserDto): Promise<User> {
-    const { email } = updateUserDto;
+  async updateInfo(
+    email: string,
+    updateUserDto: UpdateUserDto
+  ): Promise<User | undefined> {
     if (updateUserDto.password) {
       updateUserDto.password = await hashPassword(updateUserDto.password);
     }
 
     this.userRepository.update(email, updateUserDto);
-    return this.userRepository.findOneOrFail(email); // FIXME: Lanciare NotFoundError? che eccezione lancia?
+    return this.userRepository.findOne(email); // FIXME: Lanciare NotFoundError? che eccezione lancia?
   }
 }
 

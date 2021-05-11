@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b2cd4a64-c677-4fa9-953c-5cbf453b4e90",
+		"_postman_id": "a0d520d2-bea3-4367-be52-a0bd0fd7fc4b",
 		"name": "CarSharing",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -234,6 +234,40 @@
 							"port": "3000",
 							"path": [
 								"vehicles"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "update",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"mariorossi\",\n    \"phoneNumber\": \"3333333333\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/me/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"me",
+								"update"
 							]
 						}
 					},

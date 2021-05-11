@@ -15,13 +15,13 @@ dotenv.config();
 
 app.use(json());
 app.use(cors());
-app.use(cookieParser(undefined, {}));
+app.use(cookieParser());
 
 // Routers
 app.use('/auth', AuthRouter);
 app.use('/bookings', BookingRouter);
 app.use('/vehicles', VehicleRouter);
-app.use('/user', UserRouter);
+app.use('/me', UserRouter);
 
 // Middlewares
 app.use(errorHandler);

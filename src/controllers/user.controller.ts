@@ -10,8 +10,9 @@ router.post(
   requireAuth(),
   async (req: Request, res: Response, next: NextFunction) => {
     const updateUserDto: UpdateUserDto = req.body;
+    const { email } = req.userToken!;
 
-    userService.updateInfo(updateUserDto);
+    userService.updateInfo(email, updateUserDto);
 
     res.status(200).send({});
   }
