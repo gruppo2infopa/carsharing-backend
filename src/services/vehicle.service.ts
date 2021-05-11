@@ -1,18 +1,5 @@
-import { getConnection, getCustomRepository } from 'typeorm';
-import {
-  BikeInfo,
-  CarInfo,
-  ElectricalScooterInfo,
-  MotorbikeInfo,
-  VehicleInfo,
-} from '../controllers/dto/vehicle.dto';
-import {
-  Bike,
-  Car,
-  ElectricalScooter,
-  Motorbike,
-  Vehicle,
-} from '../models/vehicle.model';
+import { getCustomRepository } from 'typeorm';
+import { VehicleInfo } from '../controllers/dto/vehicle.dto';
 import {
   BikeRepository,
   CarRepository,

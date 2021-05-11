@@ -1,5 +1,4 @@
 import { getCustomRepository } from 'typeorm';
-import { Booking } from '../models/booking.model';
 import {
   BookingSummary,
   AvailableVehicles,

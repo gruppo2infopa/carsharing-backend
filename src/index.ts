@@ -2,10 +2,9 @@ import 'reflect-metadata';
 import { createConnection } from 'typeorm';
 
 async function main() {
-  const connection = await createConnection();
+  await createConnection();
 
-  // Conflitto con TypeORM
-  const { app } = require('./app');
+  const { app } = require('./app'); // Conflitto con TypeORM
   app.listen(process.env.PORT, () => {
     if (!process.env.JWT_SECRET) {
       console.error('Specify a JWT secret');
