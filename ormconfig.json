@@ -1,14 +1,39 @@
-{
-  "type": "sqlite",
-  "database": "database.sqlite",
-  "synchronize": true,
-  "logging": false,
-  "entities": ["src/models/**/*.ts"],
-  "migrations": ["src/migration/**/*.ts"],
-  "subscribers": ["src/subscriber/**/*.ts"],
-  "cli": {
-    "entitiesDir": "src/entity",
-    "migrationsDir": "src/migration",
-    "subscribersDir": "src/subscriber"
+[
+  {
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "carAdmin",
+    "password": "admin",
+    "database": "carSharing",
+    "synchronize": true,
+    "logging": false,
+    "entities": ["src/models/**/*.ts"],
+    "migrations": ["src/migration/**/*.ts"],
+    "subscribers": ["src/subscriber/**/*.ts"],
+    "cli": {
+      "entitiesDir": "src/entity",
+      "migrationsDir": "src/migration",
+      "subscribersDir": "src/subscriber"
+    }
+  },
+  {
+    "name": "test",
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "test",
+    "password": "test",
+    "database": "carSharingTest",
+    "synchronize": true,
+    "logging": false,
+    "entities": ["src/models/**/*.ts"],
+    "migrations": ["src/migration/**/*.ts"],
+    "subscribers": ["src/subscriber/**/*.ts"],
+    "cli": {
+      "entitiesDir": "src/entity",
+      "migrationsDir": "src/migration",
+      "subscribersDir": "src/subscriber"
+    }
   }
-}
+]
