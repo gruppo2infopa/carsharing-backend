@@ -1,7 +1,7 @@
 import { DriverLicense } from '../../models/driver-license.model';
 import { UserRole } from '../../models/user.model';
 
-interface UserDetails {
+export class UserDetails {
   email: string;
   password: string;
   name: string;
@@ -13,9 +13,14 @@ interface UserDetails {
   driverLicense?: DriverLicense;
 }
 
-interface UserCredentials {
+export class UserCredentials {
   email: string;
   password: string;
 }
 
-export { UserDetails, UserCredentials };
+export class UpdateUserDto {
+  email: string;
+  password?: string;
+  phoneNumber?: string;
+  driverLicense?: DriverLicense;
+}

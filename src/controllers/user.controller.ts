@@ -1,12 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { requireAuth } from '../middlewares/require-auth.handler';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto } from './dto/user.dto';
 import { userService } from '../services/user.service';
-import { UserRole } from '../models/user.model';
 
 const router = Router();
 
-// registerVehicle
 router.post(
   '/update',
   requireAuth(),

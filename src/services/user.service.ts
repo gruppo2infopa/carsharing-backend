@@ -4,7 +4,7 @@ import { UserRepository } from '../repositories/user.repository';
 import { hashPassword, comparePasswords } from '../utils/password';
 import { UnauthorizedError } from '../errors/unauthorized.error';
 import { NotFoundError } from '../errors/not-found.error';
-import { UpdateUserDto } from '../controllers/dto/update-user.dto';
+import { UpdateUserDto } from '../controllers/dto/user.dto';
 import { getCustomRepository } from 'typeorm';
 
 class UserService {
