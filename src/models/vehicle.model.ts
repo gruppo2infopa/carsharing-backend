@@ -15,11 +15,11 @@ export abstract class Vehicle {
 
 @Entity()
 export class Car extends Vehicle {
-  @Column()
+  @Column({ unique: true })
   licensePlate: string;
 
   @Column('float')
-  autonomy: number;
+  autonomy: number; // TODO: rimuovere campo. L'autonomia viene ottenuta richiamando il sistema di controllo remoto del veicolo (mockato)
 
   @Column()
   seats: number;
@@ -48,7 +48,7 @@ export class ElectricalScooter extends Vehicle {
 
 @Entity()
 export class Motorbike extends Vehicle {
-  @Column()
+  @Column({ unique: true })
   licensePlate: string;
 
   @Column('float')

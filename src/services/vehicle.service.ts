@@ -1,5 +1,7 @@
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, Repository } from 'typeorm';
 import { VehicleInfo } from '../controllers/dto/vehicle.dto';
+import { BadRequestError } from '../errors/bad-request.error';
+import { Vehicle } from '../models/vehicle.model';
 import {
   BikeRepository,
   CarRepository,
@@ -8,24 +10,30 @@ import {
 } from '../repositories/vehicle.repository';
 
 class VehicleService {
-  private carRepository = getCustomRepository(CarRepository);
-  private motorbikeRepository = getCustomRepository(MotorbikeRepository);
-  private electricalScooterRepository = getCustomRepository(
-    ElectricalScooterRepository
-  );
-  private bikeRepository = getCustomRepository(BikeRepository);
+  private repositories: Map<string, Repository<Vehicle>> = new Map<
+    string,
+    Repository<Vehicle>
+  >([
+    ['CAR', getCustomRepository(CarRepository)],
+    ['MOTORBIKE', getCustomRepository(MotorbikeRepository)],
+    ['BIKE', getCustomRepository(BikeRepository)],
+    ['ELECTRICALSCOOTER', getCustomRepository(ElectricalScooterRepository)],
+  ]);
 
-  public registerVehicle(vehicleInfo: VehicleInfo) {
+  async registerVehicle(vehicleInfo: VehicleInfo) {
     const { type } = vehicleInfo;
-    if (type.toUpperCase() === 'CAR') {
-      this.carRepository.save(vehicleInfo);
-    } else if (type.toUpperCase() === 'MOTORBIKE') {
-      this.motorbikeRepository.save(vehicleInfo);
-    } else if (type.toUpperCase() === 'BIKE') {
-      this.bikeRepository.save(vehicleInfo);
-    } else if (type.toUpperCase() === 'ELECTRICALSCOOTER') {
-      this.carRepository.save(vehicleInfo);
+    const vehicleRepository = this.repositories.get(type.toUpperCase());
+
+    if (type === 'CAR' || type === 'MOTORBIKE') {
+      const { licensePlate } = vehicleInfo;
+      const [existingVehicle] = await (
+        vehicleRepository as CarRepository | MotorbikeRepository
+      ).find({ licensePlate });
+      if (existingVehicle != undefined)
+        throw new BadRequestError('Vehicle already registered');
     }
+
+    vehicleRepository?.save({ ...vehicleInfo, bookings: [] });
   }
 }
 
