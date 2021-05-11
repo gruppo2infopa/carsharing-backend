@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e47dd293-c97d-4424-9ee3-3c1c2f2dd090",
+		"_postman_id": "b2cd4a64-c677-4fa9-953c-5cbf453b4e90",
 		"name": "CarSharing",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -15,7 +15,36 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"mario.rossi@gmail.com\",\n    \"password\": \"mariorossi\",\n    \"name\": \"Mario\",\n    \"surname\": \"Rossi\",\n    \"birthDate\": \"1980-12-12\",\n    \"fiscalCode\": \"\",\n    \"phoneNumber\": \"3333333333\"\n}",
+							"raw": "{\n    \"email\": \"mario.rossi@gmail.com\",\n    \"password\": \"mariorossi\",\n    \"name\": \"Mario\",\n    \"surname\": \"Rossi\",\n    \"birthDate\": \"1980-12-12\",\n    \"fiscalCode\": \"CRFGTH4591AER413\",\n    \"phoneNumber\": \"3333333333\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "invalid signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"\",\n    \"password\": \"ma\",\n    \"name\": \"\",\n    \"surname\": \"\",\n    \"birthDate\": \"1980-12cas-12\",\n    \"fiscalCode\": \"\",\n    \"phoneNumber\": \"cas\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -44,7 +73,65 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"mario.rossi@gmail.com\",\n    \"password\": \"fongulo.rossi\"\n}",
+							"raw": "{\n    \"email\": \"mario.rossi@gmail.com\",\n    \"password\": \"mariorossi\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/signin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "signin invalid credentials",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"mario.rossi@gmail.com\",\n    \"password\": \"mariorossicascas\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/signin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "signin user doesn't exist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"pippo.rossi@gmail.com\",\r\n    \"password\": \"mariorossi\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -81,6 +168,72 @@
 							"path": [
 								"auth",
 								"signout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Booking",
+			"item": [
+				{
+					"name": "createBooking",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/bookings",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"bookings"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vehicles",
+			"item": [
+				{
+					"name": "Register vehicle",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"car\",\r\n    \"licensePlate\": \"BD156PT\",\r\n    \"autonomy\": 60,\r\n    \"seats\": 5,\r\n    \"displacement\": 55\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/vehicles",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"vehicles"
 							]
 						}
 					},
