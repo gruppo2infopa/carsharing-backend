@@ -6,12 +6,20 @@ import { UnauthorizedError } from '../errors/unauthorized.error';
 import { NotFoundError } from '../errors/not-found.error';
 import { UpdateUserDto } from '../controllers/dto/user.dto';
 import { getCustomRepository } from 'typeorm';
+import { BadRequestError } from '../errors/bad-request.error';
 
 class UserService {
   private userRepository = getCustomRepository(UserRepository);
 
   async signup(userDetails: UserDetails): Promise<User> {
     const user: User = { ...userDetails, bookings: [] };
+
+    const foundUser: User | undefined = await this.userRepository.findOne(
+      user.email
+    );
+    if (foundUser !== undefined)
+      throw new BadRequestError('User already registered');
+
     user.password = await hashPassword(user.password);
 
     return this.userRepository.save(user);
