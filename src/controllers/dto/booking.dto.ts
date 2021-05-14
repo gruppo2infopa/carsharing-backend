@@ -6,7 +6,7 @@ interface BookingSummary {
   startDate: Date;
   endDate: Date;
   unlockCode: string;
-  finalDestination: string;
+  finalDestination?: string;
   rentType: RentType;
   vehicle: Vehicle;
 }
@@ -24,7 +24,7 @@ interface VehicleDetails {
 interface BookingDetails {
   startDate: Date;
   endDate: Date;
-  finalDestination: string;
+  finalDestination?: string;
   rentType: RentType;
 }
 

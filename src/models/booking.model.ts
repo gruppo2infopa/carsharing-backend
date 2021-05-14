@@ -14,7 +14,7 @@ class Booking {
   endDate: Date;
 
   @Column()
-  unlockCode: string;
+  unlockCode?: string;
 
   @Column('text')
   state: BookingState;

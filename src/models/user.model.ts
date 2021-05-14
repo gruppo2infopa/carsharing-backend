@@ -40,6 +40,7 @@ class User {
 
   @OneToOne(() => DriverLicense, (driverLicense) => driverLicense.user, {
     cascade: true,
+    onDelete: 'SET NULL',
   })
   @JoinColumn()
   driverLicense?: DriverLicense;
