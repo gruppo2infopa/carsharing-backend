@@ -1,8 +1,16 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  ChildEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  TableInheritance,
+} from 'typeorm';
 import { Booking } from './booking.model';
 import { DriverLicenseType } from './driver-license.model';
 
 @Entity()
+@TableInheritance({ column: { type: 'varchar', name: 'type' } })
 export abstract class Vehicle {
   @PrimaryGeneratedColumn()
   id: number;
@@ -13,32 +21,36 @@ export abstract class Vehicle {
   public abstract getRequirement(): Requirement;
 }
 
-@Entity()
+@ChildEntity()
 export class Car extends Vehicle {
   @Column({ unique: true })
-  licensePlate: string;
-
-  @Column('float')
-  autonomy: number; // TODO: rimuovere campo. L'autonomia viene ottenuta richiamando il sistema di controllo remoto del veicolo (mockato)
+  carLicensePlate: string;
 
   @Column()
-  seats: number;
+  carSeats: number;
 
   @Column('float')
-  displacement: number;
+  carDisplacement: number;
+
+  public getAutonomy(): number {
+    // TODO: valori corretti
+    return 1;
+  }
 
   public getRequirement(): Requirement {
     // TODO: cambiare con i valori corretti
-    if (this.displacement > 55.0)
+    if (this.carDisplacement > 55.0)
       return { minimumAge: 21, driverLicenseType: DriverLicenseType.B };
     else return { minimumAge: 18, driverLicenseType: DriverLicenseType.B };
   }
 }
 
-@Entity()
+@ChildEntity()
 export class ElectricalScooter extends Vehicle {
-  @Column()
-  autonomy: number;
+  public getAutonomy(): number {
+    // TODO: valori corretti
+    return 1;
+  }
 
   public getRequirement(): Requirement {
     // TODO: cambiare con i valori corretti
@@ -46,16 +58,18 @@ export class ElectricalScooter extends Vehicle {
   }
 }
 
-@Entity()
+@ChildEntity()
 export class Motorbike extends Vehicle {
   @Column({ unique: true })
-  licensePlate: string;
+  motorbikeLicensePlate: string;
 
   @Column('float')
-  autonomy: number;
+  motorbikeDisplacement: number;
 
-  @Column('float')
-  displacement: number;
+  public getAutonomy(): number {
+    // TODO: valori corretti
+    return 1;
+  }
 
   public getRequirement(): Requirement {
     // TODO: cambiare con i valori corretti
@@ -63,7 +77,7 @@ export class Motorbike extends Vehicle {
   }
 }
 
-@Entity()
+@ChildEntity()
 export class Bike extends Vehicle {
   public getRequirement(): Requirement {
     // TODO: cambiare con i valori corretti

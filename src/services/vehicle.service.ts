@@ -19,21 +19,61 @@ class VehicleService {
     ['BIKE', getCustomRepository(BikeRepository)],
     ['ELECTRICALSCOOTER', getCustomRepository(ElectricalScooterRepository)],
   ]);
+  private carRepository: CarRepository = getCustomRepository(CarRepository);
+  private motorbikeRepository: MotorbikeRepository =
+    getCustomRepository(MotorbikeRepository);
+  private bikeRepository: BikeRepository = getCustomRepository(BikeRepository);
+  private electricalScooterRepository: ElectricalScooterRepository =
+    getCustomRepository(ElectricalScooterRepository);
 
   async registerVehicle(vehicleInfo: VehicleInfo) {
     const { type } = vehicleInfo;
     const vehicleRepository = this.repositories.get(type.toUpperCase());
 
-    if (type === 'CAR' || type === 'MOTORBIKE') {
+    let existingVehicles: Vehicle[] = [];
+    if (type === 'CAR') {
       const { licensePlate } = vehicleInfo;
-      const [existingVehicle] = await (
-        vehicleRepository as CarRepository | MotorbikeRepository
-      ).find({ licensePlate });
-      if (existingVehicle != undefined)
-        throw new BadRequestError('Vehicle already registered');
+      existingVehicles = await (
+        this.repositories.get(type) as CarRepository
+      ).find({ where: { carLicensePlate: licensePlate } });
+    } else if (type === 'MOTORBIKE') {
+      const { licensePlate } = vehicleInfo;
+      existingVehicles = await (
+        this.repositories.get(type) as MotorbikeRepository
+      ).find({ where: { motorbikeLicensePlate: licensePlate } });
+    }
+    console.log(existingVehicles);
+
+    if (type === 'CAR') {
+      const {
+        licensePlate: carLicensePlate,
+        displacement: carDisplacement,
+        seats: carSeats,
+      } = vehicleInfo;
+      this.carRepository.save({
+        carLicensePlate,
+        carDisplacement,
+        carSeats,
+        bookings: [],
+      });
+    } else if (type === 'MOTORBIKE') {
+      const {
+        licensePlate: motorbikeLicensePlate,
+        displacement: motorbikeDisplacement,
+      } = vehicleInfo;
+      this.carRepository.save({
+        carLicensePlate: motorbikeLicensePlate,
+        carDisplacement: motorbikeDisplacement,
+        bookings: [],
+      });
+    } else if (type === 'ELECTRICALSCOOTER') {
+      this.electricalScooterRepository.save({ bookings: [] });
+    } else {
+      this.bikeRepository.save({ bookings: [] });
     }
 
-    vehicleRepository?.save({ ...vehicleInfo, bookings: [] });
+    if (existingVehicles.length)
+      throw new BadRequestError('Vehicle already registered');
   }
 }
 
