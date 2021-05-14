@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   OneToOne,
@@ -43,7 +42,13 @@ export class DriverLicenseType {
   public static readonly A: DriverLicenseType = new DriverLicenseType('A');
   public static readonly B: DriverLicenseType = new DriverLicenseType('B');
 
-  private constructor(name: string) {}
+  private constructor(name: string) {
+    this.name = name;
+  }
+
+  public toJSON() {
+    return `${this.name}`;
+  }
 
   @PrimaryColumn()
   name: string;

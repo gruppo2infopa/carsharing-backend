@@ -1,15 +1,14 @@
 import {
-  ChildEntity,
   Column,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  TableInheritance,
 } from 'typeorm';
 import { Booking } from './booking.model';
-import { DriverLicenseType } from './driver-license.model';
+import { VehicleModel } from './vehicle-model.model';
 
-@Entity()
+/*@Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
 export abstract class Vehicle {
   @PrimaryGeneratedColumn()
@@ -83,9 +82,22 @@ export class Bike extends Vehicle {
     // TODO: cambiare con i valori corretti
     return { minimumAge: 21, driverLicenseType: DriverLicenseType.A2 };
   }
-}
+}*/
 
-export interface Requirement {
-  minimumAge: number;
-  driverLicenseType: DriverLicenseType | null;
+@Entity()
+export class Vehicle {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true, nullable: true })
+  licensePlate: string;
+
+  @Column()
+  url: string;
+
+  @ManyToOne(() => VehicleModel, (vehicleModel) => vehicleModel.vehicles)
+  vehicleModel: VehicleModel;
+
+  @OneToMany(() => Booking, (booking) => booking.vehicle)
+  bookings: Booking[];
 }

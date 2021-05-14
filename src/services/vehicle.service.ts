@@ -1,79 +1,55 @@
-import { getCustomRepository, Repository } from 'typeorm';
-import { VehicleInfo } from '../controllers/dto/vehicle.dto';
-import { BadRequestError } from '../errors/bad-request.error';
-import { Vehicle } from '../models/vehicle.model';
+import { getCustomRepository } from 'typeorm';
 import {
-  BikeRepository,
-  CarRepository,
-  ElectricalScooterRepository,
-  MotorbikeRepository,
-} from '../repositories/vehicle.repository';
+  CreateVehicleDto,
+  CreateVehicleModelDto,
+} from '../controllers/dto/vehicle.dto';
+import { BadRequestError } from '../errors/bad-request.error';
+import { NotFoundError } from '../errors/not-found.error';
+import { VehicleModel, VehicleType } from '../models/vehicle-model.model';
+import { Vehicle } from '../models/vehicle.model';
+import { VehicleModelRepository } from '../repositories/vehicle-model.repository';
+import { VehicleRepository } from '../repositories/vehicle.repository';
 
 class VehicleService {
-  private repositories: Map<string, Repository<Vehicle>> = new Map<
-    string,
-    Repository<Vehicle>
-  >([
-    ['CAR', getCustomRepository(CarRepository)],
-    ['MOTORBIKE', getCustomRepository(MotorbikeRepository)],
-    ['BIKE', getCustomRepository(BikeRepository)],
-    ['ELECTRICALSCOOTER', getCustomRepository(ElectricalScooterRepository)],
-  ]);
-  private carRepository: CarRepository = getCustomRepository(CarRepository);
-  private motorbikeRepository: MotorbikeRepository =
-    getCustomRepository(MotorbikeRepository);
-  private bikeRepository: BikeRepository = getCustomRepository(BikeRepository);
-  private electricalScooterRepository: ElectricalScooterRepository =
-    getCustomRepository(ElectricalScooterRepository);
+  private vehicleModelRepository: VehicleModelRepository = getCustomRepository(
+    VehicleModelRepository
+  );
+  private vehicleRepository: VehicleRepository =
+    getCustomRepository(VehicleRepository);
 
-  async registerVehicle(vehicleInfo: VehicleInfo) {
-    const { type } = vehicleInfo;
-    const vehicleRepository = this.repositories.get(type.toUpperCase());
+  async registerVehicle(dto: CreateVehicleDto): Promise<Vehicle> {
+    const vehicleModel = await this.vehicleModelRepository.findOne(dto.modelId);
+    if (vehicleModel == undefined)
+      throw new NotFoundError('Vehicle model not found');
 
-    let existingVehicles: Vehicle[] = [];
-    if (type === 'CAR') {
-      const { licensePlate } = vehicleInfo;
-      existingVehicles = await (
-        this.repositories.get(type) as CarRepository
-      ).find({ where: { carLicensePlate: licensePlate } });
-    } else if (type === 'MOTORBIKE') {
-      const { licensePlate } = vehicleInfo;
-      existingVehicles = await (
-        this.repositories.get(type) as MotorbikeRepository
-      ).find({ where: { motorbikeLicensePlate: licensePlate } });
-    }
-    console.log(existingVehicles);
-
-    if (type === 'CAR') {
-      const {
-        licensePlate: carLicensePlate,
-        displacement: carDisplacement,
-        seats: carSeats,
-      } = vehicleInfo;
-      this.carRepository.save({
-        carLicensePlate,
-        carDisplacement,
-        carSeats,
-        bookings: [],
-      });
-    } else if (type === 'MOTORBIKE') {
-      const {
-        licensePlate: motorbikeLicensePlate,
-        displacement: motorbikeDisplacement,
-      } = vehicleInfo;
-      this.carRepository.save({
-        carLicensePlate: motorbikeLicensePlate,
-        carDisplacement: motorbikeDisplacement,
-        bookings: [],
-      });
-    } else if (type === 'ELECTRICALSCOOTER') {
-      this.electricalScooterRepository.save({ bookings: [] });
-    } else {
-      this.bikeRepository.save({ bookings: [] });
-    }
-
-    if (existingVehicles.length)
+    const { licensePlate } = dto;
+    const [existingVehicle] = await this.vehicleRepository.find({
+      licensePlate,
+    });
+    if (existingVehicle != undefined)
       throw new BadRequestError('Vehicle already registered');
+
+    return await this.vehicleRepository.save({
+      ...dto,
+      vehicleModel,
+      bookings: [],
+    });
+  }
+
+  async registerVehicleModel(
+    dto: CreateVehicleModelDto
+  ): Promise<VehicleModel> {
+    const [existingVehicleModel] = await this.vehicleModelRepository.find({
+      name: dto.name,
+    });
+    if (existingVehicleModel != undefined)
+      throw new BadRequestError('Vehicle model already registered');
+
+    return await this.vehicleModelRepository.save({
+      ...dto,
+      vehicleType: <VehicleType>dto.type,
+      vehicles: [],
+    });
   }
 }
 
