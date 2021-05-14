@@ -8,7 +8,9 @@ import {
   CreateVehicleDto,
   CreateVehicleModelDto,
   ResponseVehicleDto,
+  ResponseVehicleListDto,
   ResponseVehicleModelDto,
+  ResponseVehicleModelListDto,
 } from '../controllers/dto/vehicle.dto';
 import { VehicleModel, VehicleType } from '../models/vehicle-model.model';
 import { Vehicle } from '../models/vehicle.model';
@@ -53,6 +55,7 @@ router.post(
   }
 );
 
+// register vehicle models
 router.post(
   '/vehiclemodels',
   requireAuth([UserRole.CUSTOMER]),
@@ -82,6 +85,35 @@ router.post(
       await vehicleService.registerVehicleModel(vehicleModelDto);
 
     res.status(200).send(ResponseVehicleModelDto.fromEntity(vehicleModel));
+  }
+);
+
+router.get(
+  '/',
+  requireAuth([
+    UserRole.CUSTOMER,
+    UserRole.COMPANY_ADMINISTRATOR,
+    UserRole.ATTENDANT,
+    UserRole.DRIVER,
+  ]),
+  async (req: Request, res: Response) => {
+    const vehicles: Vehicle[] = await vehicleService.getAllVehicles();
+    res.status(200).send(ResponseVehicleListDto.fromEntity(vehicles));
+  }
+);
+
+router.get(
+  '/vehiclemodels',
+  requireAuth([
+    UserRole.CUSTOMER,
+    UserRole.COMPANY_ADMINISTRATOR,
+    UserRole.ATTENDANT,
+    UserRole.DRIVER,
+  ]),
+  async (req: Request, res: Response) => {
+    const vehicleModels: VehicleModel[] =
+      await vehicleService.getAllVehicleModels();
+    res.status(200).send(ResponseVehicleModelListDto.fromEntity(vehicleModels));
   }
 );
 

@@ -22,9 +22,8 @@ class VehicleService {
     if (vehicleModel == undefined)
       throw new NotFoundError('Vehicle model not found');
 
-    const { licensePlate } = dto;
     const [existingVehicle] = await this.vehicleRepository.find({
-      licensePlate,
+      licensePlate: dto.licensePlate,
     });
     if (existingVehicle != undefined)
       throw new BadRequestError('Vehicle already registered');
@@ -50,6 +49,14 @@ class VehicleService {
       vehicleType: <VehicleType>dto.type,
       vehicles: [],
     });
+  }
+
+  async getAllVehicles(): Promise<Vehicle[]> {
+    return await this.vehicleRepository.find({ relations: ['vehicleModel'] });
+  }
+
+  async getAllVehicleModels(): Promise<VehicleModel[]> {
+    return await this.vehicleModelRepository.find({});
   }
 }
 

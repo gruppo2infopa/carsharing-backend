@@ -52,3 +52,29 @@ export class ResponseVehicleModelDto {
     };
   }
 }
+
+export class ResponseVehicleListDto {
+  vehicles: ResponseVehicleDto[];
+
+  static fromEntity(vehicles: Vehicle[]): ResponseVehicleListDto {
+    return {
+      vehicles: vehicles.map((vehicle) =>
+        ResponseVehicleDto.fromEntity(vehicle)
+      ),
+    };
+  }
+}
+
+export class ResponseVehicleModelListDto {
+  vehicleModels: ResponseVehicleModelDto[];
+
+  static fromEntity(
+    vehicleModels: VehicleModel[]
+  ): ResponseVehicleModelListDto {
+    return {
+      vehicleModels: vehicleModels.map((vehicleModel) =>
+        ResponseVehicleModelDto.fromEntity(vehicleModel)
+      ),
+    };
+  }
+}
