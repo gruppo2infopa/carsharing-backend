@@ -33,6 +33,12 @@ class Booking {
 
   @ManyToOne(() => Vehicle, (vehicle) => vehicle.bookings)
   vehicle: Vehicle;
+
+  @Column({ nullable: true })
+  startRent?: Date;
+
+  @Column({ nullable: true })
+  endRent?: Date;
 }
 
 enum BookingState {
