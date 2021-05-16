@@ -6,7 +6,7 @@ import {
 import { Vehicle } from '../../models/vehicle.model';
 
 export class CreateVehicleDto {
-  licensePlate: string;
+  licensePlate?: string;
   url: string;
   modelId: number;
   type: string;
@@ -14,9 +14,10 @@ export class CreateVehicleDto {
 
 export class CreateVehicleModelDto {
   name: string;
-  displacement: number;
+  displacement?: number;
   seats: number;
   type: string;
+  price: number;
 }
 
 export class ResponseVehicleDto {
@@ -40,6 +41,7 @@ export class ResponseVehicleModelDto {
   seats: number;
   vehicleType: VehicleType;
   requirement: Requirement;
+  price: number;
 
   static fromEntity(vehicleModel: VehicleModel): ResponseVehicleModelDto {
     return {
@@ -49,6 +51,7 @@ export class ResponseVehicleModelDto {
       seats: vehicleModel.seats,
       vehicleType: vehicleModel.vehicleType,
       requirement: Requirement.getRequirement(vehicleModel),
+      price: vehicleModel.price,
     };
   }
 }

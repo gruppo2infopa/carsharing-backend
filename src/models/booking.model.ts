@@ -7,13 +7,13 @@ class Booking {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('date')
+  @Column()
   startDate: Date;
 
-  @Column('date')
+  @Column()
   endDate: Date;
 
-  @Column()
+  @Column({ nullable: true })
   unlockCode?: string;
 
   @Column('text')
@@ -22,7 +22,7 @@ class Booking {
   @Column('text')
   rentType: RentType;
 
-  @Column()
+  @Column({ nullable: true })
   finalDestination?: string;
 
   @ManyToOne(() => User, (user) => user.bookings)

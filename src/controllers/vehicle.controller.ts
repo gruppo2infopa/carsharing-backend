@@ -82,7 +82,7 @@ const vehicleModelValidator = [
   body('displacement')
     .if(body('type').not().isIn([VehicleType.CAR, VehicleType.MOTORBIKE]))
     .isEmpty()
-    .withMessage("Car and Motorbike don't have displacement"),
+    .withMessage("Bikes and Electrical Scooters don't have displacement"),
   body('seats')
     .isInt({ min: 1 })
     .withMessage('Seats must be an integer greater or equal than one'),
@@ -91,6 +91,7 @@ const vehicleModelValidator = [
     .withMessage(
       `Type must be one of the following: ${Object.keys(VehicleType)}`
     ),
+  body('price').isNumeric().withMessage('You must specify a correct price.'),
 ];
 
 // register vehicle models

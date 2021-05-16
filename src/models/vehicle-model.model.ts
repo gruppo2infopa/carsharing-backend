@@ -19,6 +19,9 @@ export class VehicleModel {
   @Column()
   vehicleType: VehicleType;
 
+  @Column('float')
+  price: number;
+
   @OneToMany(() => Vehicle, (vehicle) => vehicle.vehicleModel)
   vehicles: Vehicle[];
 }
