@@ -35,6 +35,22 @@ class VehicleService {
     });
   }
 
+  async updateVehicle(id: number, dto: CreateVehicleDto): Promise<Vehicle> {
+    const existingVehicle = await this.vehicleRepository.findOne({ id });
+    if (existingVehicle === undefined)
+      throw new NotFoundError('Vehicle not found');
+
+    const vehicleModel = await this.vehicleModelRepository.findOne(dto.modelId);
+    if (vehicleModel == undefined)
+      throw new NotFoundError('Vehicle model not found');
+
+    return await this.vehicleRepository.save({
+      ...existingVehicle,
+      ...dto,
+      vehicleModel,
+    });
+  }
+
   async registerVehicleModel(
     dto: CreateVehicleModelDto
   ): Promise<VehicleModel> {
@@ -48,6 +64,22 @@ class VehicleService {
       ...dto,
       vehicleType: <VehicleType>dto.type,
       vehicles: [],
+    });
+  }
+
+  async updateVehicleModel(
+    id: number,
+    dto: CreateVehicleModelDto
+  ): Promise<VehicleModel> {
+    const existingVehicleModel = await this.vehicleModelRepository.findOne({
+      id,
+    });
+    if (existingVehicleModel === undefined)
+      throw new NotFoundError('Vehicle model not found');
+
+    return await this.vehicleModelRepository.save({
+      ...existingVehicleModel,
+      ...dto,
     });
   }
 
