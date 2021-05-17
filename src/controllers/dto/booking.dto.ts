@@ -1,42 +1,46 @@
-import { RentType } from '../../models/booking.model';
+import { Booking, RentType } from '../../models/booking.model';
 import { Payment } from '../../models/payment.model';
 import { Vehicle } from '../../models/vehicle.model';
+import { ResponseVehicleDto } from './vehicle.dto';
 
-interface BookingSummary {
+export class ResponseBookingSummaryDto {
   startDate: Date;
   endDate: Date;
-  unlockCode: string;
+  unlockCode?: string;
   finalDestination?: string;
   rentType: RentType;
   vehicle: Vehicle;
+
+  static fromEntity(booking: Booking): ResponseBookingSummaryDto {
+    return {
+      startDate: booking.startDate,
+      endDate: booking.endDate,
+      unlockCode: booking.unlockCode,
+      finalDestination: booking.finalDestination,
+      rentType: booking.rentType,
+      vehicle: booking.vehicle,
+    };
+  }
 }
 
-interface BookingPayment {
+export class UpdateBookingWithPaymentDto {
   bookingId: number;
-  paymentsDetails: Payment;
+  paymentDetails: Payment;
 }
 
-interface VehicleDetails {
+export class UpdateBookingWithVehicleDto {
   bookingId: number;
   selectedVehicle: Vehicle;
 }
 
-interface BookingDetails {
+export class CreateBookingDto {
   startDate: Date;
   endDate: Date;
   finalDestination?: string;
   rentType: RentType;
 }
 
-interface AvailableVehicles {
+export class ResponseAvailableVehiclesDto {
   bookingId: number;
-  availableVehicles: Vehicle[];
+  availableVehicles: ResponseVehicleDto[];
 }
-
-export {
-  BookingSummary,
-  BookingPayment,
-  VehicleDetails,
-  BookingDetails,
-  AvailableVehicles,
-};

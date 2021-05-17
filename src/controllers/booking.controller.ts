@@ -2,12 +2,13 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { bookingService } from '../services/booking.service';
 import { requireAuth } from '../middlewares/require-auth.handler';
 import {
-  AvailableVehicles,
-  BookingDetails,
-  BookingPayment,
-  BookingSummary,
-  VehicleDetails,
+  CreateBookingDto,
+  ResponseAvailableVehiclesDto,
+  ResponseBookingSummaryDto,
+  UpdateBookingWithPaymentDto,
+  UpdateBookingWithVehicleDto,
 } from './dto/booking.dto';
+import { Booking } from '../models/booking.model';
 
 const router = Router();
 
@@ -18,10 +19,10 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     console.log(req.body);
 
-    const bookingDetails: BookingDetails = req.body;
+    const bookingDetails: CreateBookingDto = req.body;
     const { email } = req.userToken!;
 
-    const availableVehicles: AvailableVehicles =
+    const availableVehicles: ResponseAvailableVehiclesDto =
       await bookingService.createPendingBooking(email, bookingDetails);
 
     res.status(201).send(availableVehicles);
@@ -30,10 +31,10 @@ router.post(
 
 // selectVehicle
 router.put(
-  '/:id/vehicle', // ??
+  '/vehicle', // ??
   requireAuth(),
   async (req: Request, res: Response, next: NextFunction) => {
-    const vehicleDetails: VehicleDetails = req.body;
+    const vehicleDetails: UpdateBookingWithVehicleDto = req.body;
     const totalPrice = await bookingService.updateBookingVehicle(
       vehicleDetails
     );
@@ -48,7 +49,7 @@ router.put(
   '/:id/payment', // ??
   requireAuth(),
   async (req: Request, res: Response, next: NextFunction) => {
-    const paymentDetails: BookingPayment = req.body;
+    const paymentDetails: UpdateBookingWithPaymentDto = req.body;
     const vehicleUnlockCode = await bookingService.makePayment(paymentDetails);
 
     // restituire unlockCode del veicolo prenotato
@@ -77,8 +78,8 @@ router.get(
     const { email } = req.userToken!;
 
     // restituire tutti i booking
-    const bookings: BookingSummary[] = await bookingService.getBookings(email);
-    res.status(200).send(bookings);
+    const bookings: Booking[] = await bookingService.getBookings(email);
+    res.status(200).send(bookings.map(ResponseBookingSummaryDto.fromEntity));
   }
 );
 
