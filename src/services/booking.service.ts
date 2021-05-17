@@ -1,4 +1,13 @@
-import { Between, getCustomRepository, In, Not } from 'typeorm';
+import {
+  Between,
+  getCustomRepository,
+  In,
+  LessThan,
+  LessThanOrEqual,
+  MoreThan,
+  MoreThanOrEqual,
+  Not,
+} from 'typeorm';
 import {
   CreateBookingDto,
   ResponseAvailableVehiclesDto,
@@ -36,13 +45,53 @@ class BookingService {
   ): Promise<ResponseAvailableVehiclesDto> {
     const { startDate, endDate } = bookingDetails;
 
-    const bookedVehicles: number[] = (
-      await this.bookingRepository.find({
-        where: {
+    // Verifico che l'utente non abbia già effettuato altre prenotazioni
+    // nel periodo indicato.
+    const existingBooking: Booking[] = await this.bookingRepository.find({
+      where: [
+        {
           startDate: Between(startDate, endDate),
           endDate: Between(startDate, endDate),
-          vehicle: Not(null),
+          user: email,
         },
+        {
+          startDate: LessThanOrEqual(startDate),
+          endDate: MoreThanOrEqual(startDate),
+          user: email,
+        },
+        {
+          startDate: LessThanOrEqual(endDate),
+          endDate: MoreThanOrEqual(endDate),
+          user: email,
+        },
+      ],
+    });
+
+    if (existingBooking.length > 0) {
+      console.log(existingBooking);
+
+      throw new BadRequestError('You already have a booking in this period.');
+    }
+
+    const bookedVehicles: number[] = (
+      await this.bookingRepository.find({
+        where: [
+          {
+            startDate: Between(startDate, endDate),
+            endDate: Between(startDate, endDate),
+            vehicle: Not(null),
+          },
+          {
+            startDate: LessThanOrEqual(startDate),
+            endDate: MoreThanOrEqual(startDate),
+            vehicle: Not(null),
+          },
+          {
+            startDate: LessThanOrEqual(endDate),
+            endDate: MoreThanOrEqual(endDate),
+            vehicle: Not(null),
+          },
+        ],
         relations: ['vehicle'],
       })
     ).map((booking) => booking.vehicle.id);
@@ -67,16 +116,22 @@ class BookingService {
       availableVehicles: vehicles.map(ResponseVehicleDto.fromEntity),
     };
 
-    // TODO: impedire all'utente di fare una prenotazione che va in conflitto con un'altra che lui ha già fatto
     return availableVehicles;
   }
 
-  async updateBookingVehicle(id: number, vehicleId: number): Promise<number> {
+  async updateBookingVehicle(
+    id: number,
+    userEmail: string,
+    vehicleId: number
+  ): Promise<number> {
     const vehicle = await this.vehicleRepository.findOne(vehicleId, {
       relations: ['vehicleModel'],
     });
     const booking = await this.bookingRepository.findOne(id, {
       relations: ['vehicle', 'vehicle.vehicleModel'],
+      where: {
+        user: userEmail,
+      },
     });
 
     if (booking == undefined) {
@@ -113,7 +168,9 @@ class BookingService {
     updateBookingPaymentDto: UpdateBookingWithPaymentDto
   ): Promise<Booking> {
     const { amount, creditCard, creditCardId } = updateBookingPaymentDto;
-    const booking = await this.bookingRepository.findOne(bookingId);
+    const booking = await this.bookingRepository.findOne(bookingId, {
+      where: { user: userEmail },
+    });
     if (booking === undefined) {
       throw new NotFoundError('Booking not found');
     }
@@ -124,12 +181,12 @@ class BookingService {
     payment.state = PaymentState.PENDING;
 
     if (creditCardId) {
-      // const creditCard = await this.creditCardRepository.findOne(creditCardId);
-      const creditCard: CreditCard | undefined = await this.creditCardRepository
-        .createQueryBuilder('creditCard')
-        .where('creditCard.userEmail = :userEmail', { userEmail })
-        .andWhere('creditCard.id = :creditCardId', { creditCardId })
-        .getOne();
+      const creditCard: CreditCard | undefined =
+        await this.creditCardRepository.findOne(creditCardId, {
+          where: {
+            user: userEmail,
+          },
+        });
       if (creditCard === undefined) {
         throw new NotFoundError('Credit card not found');
       }
@@ -163,18 +220,12 @@ class BookingService {
   }
 
   async getBookings(userEmail: string): Promise<Booking[]> {
-    return this.bookingRepository
-      .createQueryBuilder('booking')
-      .select([
-        'booking.startDate',
-        'booking.endDate',
-        'booking.rentType',
-        'booking.unlockCode',
-        'booking.vehicleId',
-        'booking.finalDestination',
-      ])
-      .where('booking.userEmail = :userEmail', { userEmail })
-      .getMany();
+    return this.bookingRepository.find({
+      where: {
+        user: userEmail,
+      },
+      relations: ['vehicle', 'vehicle.vehicleModel'],
+    });
   }
 }
 

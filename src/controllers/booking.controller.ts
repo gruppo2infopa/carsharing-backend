@@ -33,9 +33,11 @@ router.put(
   requireAuth(),
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
+    const { email } = req.userToken!;
     const vehicleDetails: UpdateBookingWithVehicleDto = req.body;
     const totalPrice = await bookingService.updateBookingVehicle(
       parseInt(id),
+      email,
       vehicleDetails.vehicleId
     );
 
@@ -69,6 +71,7 @@ router.put(
   requireAuth(),
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
+    const { email } = req.userToken!;
 
     await bookingService.cancelBooking(parseInt(id));
     res.status(200).send('Booking correctly canceled');
