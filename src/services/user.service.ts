@@ -7,9 +7,12 @@ import { NotFoundError } from '../errors/not-found.error';
 import { UpdateUserDto } from '../controllers/dto/user.dto';
 import { getCustomRepository } from 'typeorm';
 import { BadRequestError } from '../errors/bad-request.error';
+import { NotificationRepository } from '../repositories/notification.repository';
+import { Notification } from '../models/notification.model';
 
 class UserService {
   private userRepository = getCustomRepository(UserRepository);
+  private notificationRepository = getCustomRepository(NotificationRepository);
 
   async signup(userDetails: UserDetails): Promise<User> {
     const user: User = { ...userDetails, bookings: [] };
@@ -48,6 +51,15 @@ class UserService {
 
     user = { ...user!, ...updateUserDto };
     return this.userRepository.save(user);
+  }
+
+  async getNotifications(email: string): Promise<Notification[]> {
+    const user: User | undefined = await this.userRepository.findOne(email);
+
+    return await this.notificationRepository.find({
+      relations: ['user'],
+      where: { isRead: false, user },
+    });
   }
 }
 

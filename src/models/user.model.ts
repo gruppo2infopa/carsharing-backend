@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Booking } from './booking.model';
 import { DriverLicense } from './driver-license.model';
+import { Notification } from './notification.model';
 
 @Entity()
 class User {
@@ -44,6 +45,9 @@ class User {
   })
   @JoinColumn()
   driverLicense?: DriverLicense;
+
+  @OneToMany(() => Notification, (notification) => notification.user)
+  notification?: Notification;
 }
 
 enum UserRole {
