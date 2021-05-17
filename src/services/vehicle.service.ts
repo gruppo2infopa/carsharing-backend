@@ -37,7 +37,7 @@ class VehicleService {
     });
   }
 
-  async getVehicleModelById(vehicleModelId: number): Promise<VehicleModel> {
+  async getVehicleModel(vehicleModelId: number): Promise<VehicleModel> {
     const vehicleModel = await this.vehicleModelRepository.findOne({
       id: vehicleModelId,
     });
@@ -64,10 +64,18 @@ class VehicleService {
 
   async deleteVehicleModel(vehicleModelId: number): Promise<void> {
     const vehicleModel = await this.vehicleModelRepository.findOne({
-      id: vehicleModelId,
+      relations: ['vehicles'],
+      where: {
+        id: vehicleModelId,
+      },
     });
     if (vehicleModel == undefined)
       throw new NotFoundError('Vehicle model not found');
+
+    if (vehicleModel.vehicles.length > 0)
+      throw new BadRequestError(
+        'This vehicle model has some instances. Delete those first.'
+      );
 
     await this.vehicleModelRepository.delete(vehicleModelId);
   }
@@ -94,7 +102,7 @@ class VehicleService {
     });
   }
 
-  async getVehicleById(vehicleId: number): Promise<Vehicle> {
+  async getVehicle(vehicleId: number): Promise<Vehicle> {
     const vehicle = await this.vehicleRepository.findOne({
       relations: ['vehicleModel'],
       where: {
@@ -119,6 +127,13 @@ class VehicleService {
       ...dto,
       vehicleModel,
     });
+  }
+
+  async deleteVehicle(vehicleId: number): Promise<void> {
+    const vehicle = await this.vehicleRepository.findOne(vehicleId);
+    if (vehicle == undefined) throw new NotFoundError('Vehicle not found');
+
+    await this.vehicleRepository.delete(vehicleId);
   }
 }
 

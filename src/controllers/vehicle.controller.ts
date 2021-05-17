@@ -55,7 +55,7 @@ const vehicleModelValidator = [
 
 router.post(
   '/models',
-  requireAuth([UserRole.CUSTOMER]),
+  requireAuth([UserRole.COMPANY_ADMINISTRATOR]),
   vehicleModelValidator,
   validateRequest,
   async (req: Request, res: Response) => {
@@ -76,7 +76,7 @@ router.get(
     UserRole.COMPANY_ADMINISTRATOR,
   ]),
   async (req: Request, res: Response) => {
-    const vehicleModel: VehicleModel = await vehicleService.getVehicleModelById(
+    const vehicleModel: VehicleModel = await vehicleService.getVehicleModel(
       parseInt(req.params.vehicleModelId)
     );
 
@@ -151,10 +151,9 @@ const vehicleRequestValidator = [
     ),
 ];
 
-// registerVehicle
 router.post(
   '/',
-  requireAuth([UserRole.CUSTOMER]),
+  requireAuth([UserRole.COMPANY_ADMINISTRATOR]),
   vehicleRequestValidator,
   validateRequest,
   async (req: Request, res: Response) => {
@@ -176,7 +175,7 @@ router.get(
     UserRole.COMPANY_ADMINISTRATOR,
   ]),
   async (req: Request, res: Response) => {
-    const vehicle: Vehicle = await vehicleService.getVehicleById(
+    const vehicle: Vehicle = await vehicleService.getVehicle(
       parseInt(req.params.vehicleId)
     );
 
@@ -185,20 +184,28 @@ router.get(
 );
 
 router.put(
-  '/:id',
+  '/:vehicleId',
   vehicleRequestValidator,
   validateRequest,
-  requireAuth([UserRole.CUSTOMER]),
+  requireAuth([UserRole.COMPANY_ADMINISTRATOR]),
   async (req: Request, res: Response) => {
     const dto: CreateVehicleDto = req.body;
     const updatedVehicle: Vehicle = await vehicleService.updateVehicle(
-      parseInt(req.params.id),
+      parseInt(req.params.vehicleId),
       dto
     );
     res.status(200).send(ResponseVehicleDto.fromEntity(updatedVehicle));
   }
 );
 
-// TODO: DELETE VEHICLE WITH ID
+router.delete(
+  '/:vehicleId',
+  requireAuth([UserRole.COMPANY_ADMINISTRATOR]),
+  async (req: Request, res: Response) => {
+    await vehicleService.deleteVehicle(parseInt(req.params.vehicleId));
+
+    res.status(200).send({});
+  }
+);
 
 export { router as VehicleRouter };
