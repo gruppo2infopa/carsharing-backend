@@ -17,38 +17,8 @@ class VehicleService {
   private vehicleRepository: VehicleRepository =
     getCustomRepository(VehicleRepository);
 
-  async registerVehicle(dto: CreateVehicleDto): Promise<Vehicle> {
-    const vehicleModel = await this.vehicleModelRepository.findOne(dto.modelId);
-    if (vehicleModel == undefined)
-      throw new NotFoundError('Vehicle model not found');
-
-    const [existingVehicle] = await this.vehicleRepository.find({
-      licensePlate: dto.licensePlate,
-    });
-    if (existingVehicle != undefined)
-      throw new BadRequestError('Vehicle already registered');
-
-    return await this.vehicleRepository.save({
-      ...dto,
-      vehicleModel,
-      bookings: [],
-    });
-  }
-
-  async updateVehicle(id: number, dto: CreateVehicleDto): Promise<Vehicle> {
-    const existingVehicle = await this.vehicleRepository.findOne({ id });
-    if (existingVehicle === undefined)
-      throw new NotFoundError('Vehicle not found');
-
-    const vehicleModel = await this.vehicleModelRepository.findOne(dto.modelId);
-    if (vehicleModel == undefined)
-      throw new NotFoundError('Vehicle model not found');
-
-    return await this.vehicleRepository.save({
-      ...existingVehicle,
-      ...dto,
-      vehicleModel,
-    });
+  async getAllVehicleModels(): Promise<VehicleModel[]> {
+    return await this.vehicleModelRepository.find({});
   }
 
   async registerVehicleModel(
@@ -67,6 +37,15 @@ class VehicleService {
     });
   }
 
+  async getVehicleModelById(vehicleModelId: number): Promise<VehicleModel> {
+    const vehicleModel = await this.vehicleModelRepository.findOne({
+      id: vehicleModelId,
+    });
+    if (vehicleModel == undefined)
+      throw new NotFoundError('Vehicle model not found');
+    return vehicleModel;
+  }
+
   async updateVehicleModel(
     id: number,
     dto: CreateVehicleModelDto
@@ -83,12 +62,63 @@ class VehicleService {
     });
   }
 
+  async deleteVehicleModel(vehicleModelId: number): Promise<void> {
+    const vehicleModel = await this.vehicleModelRepository.findOne({
+      id: vehicleModelId,
+    });
+    if (vehicleModel == undefined)
+      throw new NotFoundError('Vehicle model not found');
+
+    await this.vehicleModelRepository.delete(vehicleModelId);
+  }
+
   async getAllVehicles(): Promise<Vehicle[]> {
     return await this.vehicleRepository.find({ relations: ['vehicleModel'] });
   }
 
-  async getAllVehicleModels(): Promise<VehicleModel[]> {
-    return await this.vehicleModelRepository.find({});
+  async registerVehicle(dto: CreateVehicleDto): Promise<Vehicle> {
+    const vehicleModel = await this.vehicleModelRepository.findOne(dto.modelId);
+    if (vehicleModel == undefined)
+      throw new NotFoundError('Vehicle model not found');
+
+    const [existingVehicle] = await this.vehicleRepository.find({
+      licensePlate: dto.licensePlate,
+    });
+    if (existingVehicle != undefined)
+      throw new BadRequestError('Vehicle already registered');
+
+    return await this.vehicleRepository.save({
+      ...dto,
+      vehicleModel,
+      bookings: [],
+    });
+  }
+
+  async getVehicleById(vehicleId: number): Promise<Vehicle> {
+    const vehicle = await this.vehicleRepository.findOne({
+      relations: ['vehicleModel'],
+      where: {
+        id: vehicleId,
+      },
+    });
+    if (vehicle == undefined) throw new NotFoundError('Vehicle not found');
+    return vehicle;
+  }
+
+  async updateVehicle(id: number, dto: CreateVehicleDto): Promise<Vehicle> {
+    const existingVehicle = await this.vehicleRepository.findOne({ id });
+    if (existingVehicle === undefined)
+      throw new NotFoundError('Vehicle not found');
+
+    const vehicleModel = await this.vehicleModelRepository.findOne(dto.modelId);
+    if (vehicleModel == undefined)
+      throw new NotFoundError('Vehicle model not found');
+
+    return await this.vehicleRepository.save({
+      ...existingVehicle,
+      ...dto,
+      vehicleModel,
+    });
   }
 }
 
