@@ -6,17 +6,23 @@ import {
   UpdateBookingWithVehicleDto,
 } from '../controllers/dto/booking.dto';
 import { ResponseVehicleDto } from '../controllers/dto/vehicle.dto';
+import { BadRequestError } from '../errors/bad-request.error';
 import { NotFoundError } from '../errors/not-found.error';
 import { Booking, BookingState, RentType } from '../models/booking.model';
+import { CreditCard } from '../models/credit-card.model';
+import { Payment, PaymentState } from '../models/payment.model';
 import { Vehicle } from '../models/vehicle.model';
 import { BookingRepository } from '../repositories/booking.repository';
+import { CreditCardRepository } from '../repositories/credit-card.repository';
 import { UserRepository } from '../repositories/user.repository';
 import { VehicleRepository } from '../repositories/vehicle.repository';
+import RandomString from 'randomstring';
 
 class BookingService {
   private bookingRepository = getCustomRepository(BookingRepository);
   private vehicleRepository = getCustomRepository(VehicleRepository);
   private userRepository = getCustomRepository(UserRepository);
+  private creditCardRepository = getCustomRepository(CreditCardRepository);
 
   private priceRentMap: Map<RentType, number> = new Map([
     [RentType.ONE_WAY, 1],
@@ -42,7 +48,10 @@ class BookingService {
     ).map((booking) => booking.vehicle.id);
 
     const vehicles: Vehicle[] = await this.vehicleRepository.find({
-      id: Not(In(bookedVehicles)),
+      where: {
+        id: Not(In(bookedVehicles)),
+      },
+      relations: ['vehicleModel'],
     });
 
     const user = await this.userRepository.findOne(email);
@@ -58,19 +67,23 @@ class BookingService {
       availableVehicles: vehicles.map(ResponseVehicleDto.fromEntity),
     };
 
+    // TODO: impedire all'utente di fare una prenotazione che va in conflitto con un'altra che lui ha già fatto
     return availableVehicles;
   }
 
-  async updateBookingVehicle(
-    vehicleDetails: UpdateBookingWithVehicleDto
-  ): Promise<number> {
-    const { bookingId: id, selectedVehicle: vehicle } = vehicleDetails;
+  async updateBookingVehicle(id: number, vehicleId: number): Promise<number> {
+    const vehicle = await this.vehicleRepository.findOne(vehicleId, {
+      relations: ['vehicleModel'],
+    });
     const booking = await this.bookingRepository.findOne(id, {
       relations: ['vehicle', 'vehicle.vehicleModel'],
     });
 
     if (booking == undefined) {
       throw new NotFoundError('Booking not found');
+    }
+    if (vehicle == undefined) {
+      throw new NotFoundError('Vehicle not found');
     }
 
     booking.vehicle = vehicle;
@@ -90,14 +103,53 @@ class BookingService {
       return totalPrice * 0.625;
     }
 
+    // TODO: controllare i requisiti del veicolo
     return totalPrice;
   }
 
   async makePayment(
-    paymentDetails: UpdateBookingWithPaymentDto
-  ): Promise<string> {
-    // TODO: add code
-    return '';
+    userEmail: string,
+    bookingId: number,
+    updateBookingPaymentDto: UpdateBookingWithPaymentDto
+  ): Promise<Booking> {
+    const { amount, creditCard, creditCardId } = updateBookingPaymentDto;
+    const booking = await this.bookingRepository.findOne(bookingId);
+    if (booking === undefined) {
+      throw new NotFoundError('Booking not found');
+    }
+
+    const payment = new Payment();
+    payment.amount = amount;
+    payment.date = new Date();
+    payment.state = PaymentState.PENDING;
+
+    if (creditCardId) {
+      // const creditCard = await this.creditCardRepository.findOne(creditCardId);
+      const creditCard: CreditCard | undefined = await this.creditCardRepository
+        .createQueryBuilder('creditCard')
+        .where('creditCard.userEmail = :userEmail', { userEmail })
+        .andWhere('creditCard.id = :creditCardId', { creditCardId })
+        .getOne();
+      if (creditCard === undefined) {
+        throw new NotFoundError('Credit card not found');
+      }
+
+      payment.creditCard = creditCard;
+    } else if (creditCard) {
+      payment.creditCard = creditCard;
+    } else {
+      throw new BadRequestError('You must specify one credit card');
+    }
+
+    // TODO: mocked charge payment
+    payment.state = PaymentState.ACCEPTED;
+
+    booking.payment = payment;
+    booking.unlockCode = RandomString.generate({
+      capitalization: 'uppercase',
+      length: 5,
+    });
+    return this.bookingRepository.save(booking);
   }
 
   async cancelBooking(bookingId: number): Promise<Booking> {

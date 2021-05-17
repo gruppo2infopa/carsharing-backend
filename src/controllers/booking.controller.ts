@@ -17,8 +17,6 @@ router.post(
   '/',
   requireAuth(),
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body);
-
     const bookingDetails: CreateBookingDto = req.body;
     const { email } = req.userToken!;
 
@@ -31,12 +29,14 @@ router.post(
 
 // selectVehicle
 router.put(
-  '/vehicle', // ??
+  '/:id/vehicle',
   requireAuth(),
   async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
     const vehicleDetails: UpdateBookingWithVehicleDto = req.body;
     const totalPrice = await bookingService.updateBookingVehicle(
-      vehicleDetails
+      parseInt(id),
+      vehicleDetails.vehicleId
     );
 
     // return total booking price
@@ -46,14 +46,20 @@ router.put(
 
 // makePayment
 router.put(
-  '/:id/payment', // ??
+  '/:id/payment',
   requireAuth(),
   async (req: Request, res: Response, next: NextFunction) => {
-    const paymentDetails: UpdateBookingWithPaymentDto = req.body;
-    const vehicleUnlockCode = await bookingService.makePayment(paymentDetails);
+    const { id } = req.params;
+    const { email } = req.userToken!;
+    const updateBookingPaymentDto: UpdateBookingWithPaymentDto = req.body;
+    const booking = await bookingService.makePayment(
+      email,
+      parseInt(id),
+      updateBookingPaymentDto
+    );
 
     // restituire unlockCode del veicolo prenotato
-    res.status(200).send({ vehicleUnlockCode }); // DTO anziché restituire un singolo valore?
+    res.status(200).send(ResponseBookingSummaryDto.fromEntity(booking));
   }
 );
 
@@ -64,7 +70,7 @@ router.put(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
-    await bookingService.cancelBooking(+id);
+    await bookingService.cancelBooking(parseInt(id));
     res.status(200).send('Booking correctly canceled');
   }
 );
@@ -74,7 +80,6 @@ router.get(
   '/',
   requireAuth(),
   async (req: Request, res: Response, next: NextFunction) => {
-    // TODO: add code
     const { email } = req.userToken!;
 
     // restituire tutti i booking

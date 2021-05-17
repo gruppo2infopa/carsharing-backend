@@ -7,7 +7,7 @@ import { NotificationDto } from './dto/notification.dto';
 
 const router = Router();
 
-router.post(
+router.put(
   '/update',
   requireAuth(),
   async (req: Request, res: Response, next: NextFunction) => {
@@ -17,6 +17,28 @@ router.post(
     userService.updateInfo(email, updateUserDto);
 
     res.status(200).send({});
+  }
+);
+
+router.put(
+  '/unlink/:id',
+  requireAuth(),
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.userToken!;
+    const { id } = req.params;
+    userService.unlinkCard(email, id);
+
+    res.status(200).send({});
+  }
+);
+router.get(
+  '/creditCards',
+  requireAuth(),
+  async (req: Request, res: Response) => {
+    const { email } = req.userToken!;
+    const creditCards = await userService.getCreditCards(email);
+
+    res.status(200).send(creditCards);
   }
 );
 

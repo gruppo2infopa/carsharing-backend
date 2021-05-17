@@ -1,6 +1,8 @@
 import { Booking, RentType } from '../../models/booking.model';
+import { CreditCard } from '../../models/credit-card.model';
 import { Payment } from '../../models/payment.model';
 import { Vehicle } from '../../models/vehicle.model';
+import { CreateCreditCardDto } from './credit-card.dto';
 import { ResponseVehicleDto } from './vehicle.dto';
 
 export class ResponseBookingSummaryDto {
@@ -24,13 +26,13 @@ export class ResponseBookingSummaryDto {
 }
 
 export class UpdateBookingWithPaymentDto {
-  bookingId: number;
-  paymentDetails: Payment;
+  amount: number;
+  creditCard?: CreateCreditCardDto;
+  creditCardId?: string;
 }
 
 export class UpdateBookingWithVehicleDto {
-  bookingId: number;
-  selectedVehicle: Vehicle;
+  vehicleId: number;
 }
 
 export class CreateBookingDto {

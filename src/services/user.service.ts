@@ -9,13 +9,14 @@ import { getCustomRepository } from 'typeorm';
 import { BadRequestError } from '../errors/bad-request.error';
 import { NotificationRepository } from '../repositories/notification.repository';
 import { Notification } from '../models/notification.model';
+import { CreditCard } from '../models/credit-card.model';
 
 class UserService {
   private userRepository = getCustomRepository(UserRepository);
   private notificationRepository = getCustomRepository(NotificationRepository);
 
   async signup(userDetails: UserDetails): Promise<User> {
-    const user: User = { ...userDetails, bookings: [] };
+    const user: User = { ...userDetails, bookings: [], creditCards: [] };
 
     const foundUser: User | undefined = await this.userRepository.findOne(
       user.email
@@ -40,13 +41,23 @@ class UserService {
     return user;
   }
 
-  async updateInfo(
-    email: string,
-    updateUserDto: UpdateUserDto
-  ): Promise<User | undefined> {
-    let user = await this.userRepository.findOne(email);
+  async updateInfo(email: string, updateUserDto: UpdateUserDto): Promise<User> {
+    let user = await this.userRepository.findOne(email, {
+      relations: ['creditCards'],
+    });
+    if (user === undefined) {
+      throw new NotFoundError('User not found.');
+    }
+
     if (updateUserDto.password) {
       updateUserDto.password = await hashPassword(updateUserDto.password);
+    }
+
+    if (updateUserDto.creditCard) {
+      const { creditCard } = updateUserDto;
+      user.creditCards.push(creditCard);
+
+      delete updateUserDto.creditCard;
     }
 
     user = { ...user!, ...updateUserDto };
@@ -60,6 +71,29 @@ class UserService {
       relations: ['user'],
       where: { isRead: false, user },
     });
+  }
+
+  async unlinkCard(email: string, id: string): Promise<User> {
+    const user = await this.userRepository.findOne(email, {
+      relations: ['creditCards'],
+    });
+    if (user === undefined) {
+      throw new NotFoundError('User not found.');
+    }
+
+    const index: number = user.creditCards.findIndex((cc) => cc.id === id);
+    user.creditCards.splice(index, 1);
+
+    return this.userRepository.save(user);
+  }
+
+  async getCreditCards(email: string): Promise<CreditCard[]> {
+    const user = await this.userRepository.findOne(email, { relations: ['creditCards'] });
+    if (user === undefined) {
+      throw new NotFoundError('User not found');
+    }
+
+    return user.creditCards;
   }
 }
 

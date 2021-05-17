@@ -1,10 +1,9 @@
 import { getRepository } from 'typeorm';
-import { BookingDetails } from '../controllers/dto/booking.dto';
 import { RentDto, UpdateRentDto } from '../controllers/dto/rent.dto';
-import { BadRequestError } from '../errors/bad-request.error';
 import { NotFoundError } from '../errors/not-found.error';
 import { UnauthorizedError } from '../errors/unauthorized.error';
 import { Booking } from '../models/booking.model';
+import { Payment } from '../models/payment.model';
 import { UserRole } from '../models/user.model';
 import { BookingRepository } from '../repositories/booking.repository';
 
@@ -60,7 +59,7 @@ class RentService {
     existingBooking.endRent = new Date();
 
     if (existingBooking.endRent > existingBooking.endDate) {
-      //TODO
+      //TODO: charge latePayment
     }
 
     return this.bookingRepository.save(existingBooking);
