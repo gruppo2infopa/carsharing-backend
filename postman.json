@@ -158,6 +158,10 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://localhost:3000/auth/signout",
 							"protocol": "http",
@@ -168,6 +172,35 @@
 							"path": [
 								"auth",
 								"signout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signin company administrator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"pippo.neri@gmail.com\",\r\n    \"password\": \"mariorossi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/signin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"signin"
 							]
 						}
 					},
@@ -215,21 +248,12 @@
 					"name": "Models",
 					"item": [
 						{
-							"name": "Register car model",
+							"name": "Get all vehicle models",
 							"request": {
-								"method": "POST",
+								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"BMW i19\",\r\n    \"displacement\": 4.6,\r\n    \"seats\": 5,\r\n    \"type\": \"CAR\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "http://localhost:3000/vehicles/vehiclemodels/",
+									"raw": "http://localhost:3000/vehicles/models/",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -237,7 +261,37 @@
 									"port": "3000",
 									"path": [
 										"vehicles",
-										"vehiclemodels",
+										"models",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register car model",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"BMW i21\",\r\n    \"displacement\": 4.6,\r\n    \"seats\": 5,\r\n    \"type\": \"CAR\",\r\n    \"price\": 40.0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/vehicles/models/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"vehicles",
+										"models",
 										""
 									]
 								}
@@ -251,7 +305,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"MOTO BELLA 3\",\r\n    \"displacement\": 6.7,\r\n    \"seats\": 2,\r\n    \"type\": \"MOTORBIKE\"\r\n}",
+									"raw": "{\r\n    \"name\": \"MOTO BELLA 3\",\r\n    \"displacement\": 6.7,\r\n    \"seats\": 2,\r\n    \"type\": \"MOTORBIKE\",\r\n    \"price\": 40.0\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -259,7 +313,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/vehicles/vehiclemodels/",
+									"raw": "http://localhost:3000/vehicles/models/",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -267,7 +321,7 @@
 									"port": "3000",
 									"path": [
 										"vehicles",
-										"vehiclemodels",
+										"models",
 										""
 									]
 								}
@@ -281,7 +335,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"MONOPATTINO 2\",\r\n    \"seats\": 1,\r\n    \"type\": \"ELECTRICAL_SCOOTER\"\r\n}",
+									"raw": "{\r\n    \"name\": \"MONOPATTINO 2\",\r\n    \"seats\": 1,\r\n    \"type\": \"ELECTRICAL_SCOOTER\",\r\n    \"price\": 40.0\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -289,7 +343,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/vehicles/vehiclemodels/",
+									"raw": "http://localhost:3000/vehicles/models/",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -297,7 +351,7 @@
 									"port": "3000",
 									"path": [
 										"vehicles",
-										"vehiclemodels",
+										"models",
 										""
 									]
 								}
@@ -311,7 +365,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"bici 2\",\r\n    \"seats\": 2,\r\n    \"type\": \"BIKE\"\r\n}",
+									"raw": "{\r\n    \"name\": \"bici 2\",\r\n    \"seats\": 2,\r\n    \"type\": \"BIKE\",\r\n    \"price\": 40.0\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -319,7 +373,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/vehicles/vehiclemodels/",
+									"raw": "http://localhost:3000/vehicles/models/",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -327,8 +381,80 @@
 									"port": "3000",
 									"path": [
 										"vehicles",
-										"vehiclemodels",
+										"models",
 										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get vehicle model by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/vehicles/models/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"vehicles",
+										"models",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update vehicle model",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"BMW i1\",\r\n    \"displacement\": 1.1,\r\n    \"seats\": 4,\r\n    \"type\": \"CAR\",\r\n    \"price\": 56.0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/vehicles/models/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"vehicles",
+										"models",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete vehicle model",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/vehicles/models/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"vehicles",
+										"models",
+										"2"
 									]
 								}
 							},
@@ -337,13 +463,32 @@
 					]
 				},
 				{
+					"name": "Get all vehicles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/vehicles",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"vehicles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Register car",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"licensePlate\": \"BD233TT\",\r\n    \"url\": \"http://98.1.23.14:80\",\r\n    \"modelId\": 1,\r\n    \"type\": \"CAR\"\r\n}",
+							"raw": "{\r\n    \"licensePlate\": \"BD233TT\",\r\n    \"url\": \"http://98.1.23.14:80\",\r\n    \"modelId\": 4,\r\n    \"type\": \"CAR\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -371,7 +516,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"licensePlate\": \"BG1234\",\r\n    \"url\": \"http://98.1.23.14:80\",\r\n    \"modelId\": 1,\r\n    \"type\": \"MOTORBIKE\"\r\n}",
+							"raw": "{\r\n    \"licensePlate\": \"BG1234\",\r\n    \"url\": \"http://98.1.23.14:80\",\r\n    \"modelId\": 5,\r\n    \"type\": \"MOTORBIKE\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -399,7 +544,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"url\": \"http://98.1.23.14:80\",\r\n    \"modelId\": 3,\r\n    \"type\": \"ELECTRICAL_SCOOTER\"\r\n}",
+							"raw": "{\r\n    \"url\": \"http://98.1.23.14:80\",\r\n    \"modelId\": 6,\r\n    \"type\": \"ELECTRICAL_SCOOTER\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -427,7 +572,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"url\": \"http://98.1.23.14:80\",\r\n    \"modelId\": 3,\r\n    \"type\": \"BIKE\"\r\n}",
+							"raw": "{\r\n    \"url\": \"http://98.1.23.14:80\",\r\n    \"modelId\": 7,\r\n    \"type\": \"BIKE\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -477,31 +622,32 @@
 					"response": []
 				},
 				{
-					"name": "Get all vehicles",
+					"name": "Get vehicle by id",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/vehicles",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"vehicles"
-							]
+							"raw": ""
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get all vehicle models",
+					"name": "Update vehicle",
 					"request": {
-						"method": "GET",
+						"method": "PUT",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"licensePlate\": \"BD333TT\",\r\n    \"url\": \"http://99.33.33.33:80\",\r\n    \"modelId\": 4,\r\n    \"type\": \"CAR\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:3000/vehicles/vehiclemodels/",
+							"raw": "http://localhost:3000/vehicles/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -509,8 +655,27 @@
 							"port": "3000",
 							"path": [
 								"vehicles",
-								"vehiclemodels",
-								""
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete vehicle",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/vehicles/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"vehicles",
+								"2"
 							]
 						}
 					},
