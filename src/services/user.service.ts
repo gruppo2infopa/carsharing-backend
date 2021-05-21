@@ -39,7 +39,7 @@ class UserService {
 
     const savedUser = await this.userRepository.save(user);
 
-    const link = `http://localhost:3000/verifyEmail?userEmail=${user.email}&verifyCode=${user.verifyCode}`;
+    const link = `http://localhost:3000/auth/verifyEmail?userEmail=${user.email}&verifyCode=${user.verifyCode}`;
     sendEmail(
       user.email,
       'Conferma email',
