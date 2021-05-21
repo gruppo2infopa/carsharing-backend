@@ -7,7 +7,9 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { Booking } from './booking.model';
+import { CreditCard } from './credit-card.model';
 import { DriverLicense } from './driver-license.model';
+import { Notification } from './notification.model';
 
 @Entity()
 class User {
@@ -50,6 +52,14 @@ class User {
   })
   @JoinColumn()
   driverLicense?: DriverLicense;
+
+  @OneToMany(() => Notification, (notification) => notification.user)
+  notification?: Notification;
+
+  @OneToMany(() => CreditCard, (creditCard) => creditCard.user, {
+    cascade: true,
+  })
+  creditCards: CreditCard[];
 }
 
 enum UserRole {

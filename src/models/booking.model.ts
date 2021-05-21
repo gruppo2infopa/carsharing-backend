@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Payment } from './payment.model';
 import { User } from './user.model';
 import { Vehicle } from './vehicle.model';
 
@@ -33,6 +41,12 @@ class Booking {
 
   @ManyToOne(() => Vehicle, (vehicle) => vehicle.bookings)
   vehicle: Vehicle;
+
+  @OneToOne(() => Payment, (payment) => payment.booking, {
+    cascade: true,
+  })
+  @JoinColumn()
+  payment?: Payment;
 
   @Column({ nullable: true })
   startRent?: Date;

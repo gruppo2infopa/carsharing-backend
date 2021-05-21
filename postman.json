@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "cb7c1379-9b8c-4c26-8dd8-f37396b7ba13",
+		"_postman_id": "d34e066a-a838-43d1-b846-2b01ef2fa37b",
 		"name": "CarSharing",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -218,13 +218,112 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\n    \"startDate\": \"2012-12-12\",\n    \"endDate\": \"2015-12-12\",\n    \"rentType\": \"ONE_WAY\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
+						"url": {
+							"raw": "http://localhost:3000/bookings",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"bookings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select vehicle",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vehicleId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/bookings/5/vehicle",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"bookings",
+								"5",
+								"vehicle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Make payment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 657000,\n    \"creditCardId\": \"1234123412341234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/bookings/4/payment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"bookings",
+								"4",
+								"payment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel booking",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/bookings/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"bookings",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get my bookings",
+					"request": {
+						"method": "GET",
+						"header": [],
 						"url": {
 							"raw": "http://localhost:3000/bookings",
 							"protocol": "http",
@@ -275,7 +374,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"BMW i21\",\r\n    \"displacement\": 4.6,\r\n    \"seats\": 5,\r\n    \"type\": \"CAR\",\r\n    \"price\": 40.0\r\n}",
+									"raw": "{\r\n    \"name\": \"BMW i21\",\r\n    \"displacement\": 4.6,\r\n    \"seats\": 5,\r\n    \"type\": \"CAR\",\r\n    \"price\": 2.0\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -488,7 +587,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"licensePlate\": \"BD233TT\",\r\n    \"url\": \"http://98.1.23.14:80\",\r\n    \"modelId\": 4,\r\n    \"type\": \"CAR\"\r\n}",
+							"raw": "{\r\n    \"licensePlate\": \"BD233TT\",\r\n    \"url\": \"http://98.1.23.14:80\",\r\n    \"modelId\": 1,\r\n    \"type\": \"CAR\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -687,13 +786,13 @@
 			"name": "User",
 			"item": [
 				{
-					"name": "update",
+					"name": "Update credit card",
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phoneNumber\": \"123456789\",\n    \"driverLicense\": {\n        \"id\": \"abcd1234\",\n        \"issueDate\": \"2015-12-12\",\n        \"expiryDate\": \"2025-12-12\",\n        \"img\": \"/path/to/img\",\n        \"categories\": [\n            {\"name\": \"A\"},\n            {\"name\": \"B\"},\n            {\"name\": \"A1\"}\n        ]\n    }\n}",
+							"raw": "{\n    \"creditCard\": {\n        \"id\": \"1234567812345678\",\n        \"owner\": \"Mario Rossi\",\n        \"expiryDate\": \"2022-12-12\",\n        \"circuit\": \"MasterCard\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -712,6 +811,94 @@
 								"update"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update driver license",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"driverLicense\": {\n        \"id\": \"abcd1234\",\n        \"issueDate\": \"2012-12-12\",\n        \"expiryDate\": \"2022-12-12\",\n        \"categories\": [{\"name\": \"A\"}],\n        \"img\": \"/path/to/img\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/me/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"me",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update phone number",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phoneNumber\": \"3281234567\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/me/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"me",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unlink credit card",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/me/unlink/1234567812345678",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"me",
+								"unlink",
+								"1234567812345678"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "my credit cards",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
 					},
 					"response": []
 				}

@@ -1,4 +1,8 @@
-import { DriverLicense } from '../../models/driver-license.model';
+import { CreditCard } from '../../models/credit-card.model';
+import {
+  DriverLicense,
+  DriverLicenseType,
+} from '../../models/driver-license.model';
 import { UserRole } from '../../models/user.model';
 
 export class UserDetails {
@@ -22,4 +26,5 @@ export class UpdateUserDto {
   password?: string;
   phoneNumber?: string;
   driverLicense?: DriverLicense;
+  creditCard?: CreditCard;
 }
