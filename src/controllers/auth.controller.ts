@@ -118,4 +118,11 @@ router.post('/signout', async (req: Request, res: Response) => {
   res.status(200).send({});
 });
 
+router.get('/verifyEmail', async (req: Request, res: Response) => {
+  const { userEmail, verifyCode } = req.query;
+  userService.verifyEmail(userEmail as string, verifyCode as string);
+
+  res.status(200).send({});
+});
+
 export { router as AuthRouter };

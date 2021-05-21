@@ -35,6 +35,12 @@ class User {
   @Column('text')
   role: UserRole;
 
+  @Column()
+  hasVerifiedEmail: boolean;
+
+  @Column()
+  verifyCode: string;
+
   @OneToMany(() => Booking, (booking) => booking.user)
   bookings: Booking[];
 
