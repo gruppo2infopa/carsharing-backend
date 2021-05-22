@@ -1,7 +1,37 @@
 import request from 'supertest';
 import { app } from '../../app';
+import { User, UserRole } from '../../models/user.model';
+import { UserDetails } from '../dto/user.dto';
+
+const fakeCustomer: User = {
+  email: 'prova@gmail.com',
+  password: 'password',
+  name: 'nome',
+  surname: 'cognome',
+  birthDate: new Date('2002-10-4'),
+  fiscalCode: 'GHYCASGHYCASGHYC',
+  phoneNumber: '0918173459',
+  bookings: [],
+  creditCards: [],
+  hasVerifiedEmail: true,
+  verifyCode: 'abcd',
+  role: UserRole.CUSTOMER,
+};
 
 describe('User Authentication', () => {
+  test('Should signup the user', async () => {
+    const newUser = fakeCustomer;
+    newUser.hasVerifiedEmail = false;
+
+    await request(app)
+      .post('/auth/signup')
+      .send(newUser as UserDetails)
+      .expect('Content-Type', 'application/json')
+      .expect(201);
+  });
+});
+
+/*describe('User Authentication', () => {
   const validUser = {
     email: 'luca.bianchi@gmail.com',
     password: 'lucabianchi',
@@ -76,4 +106,4 @@ describe('User Authentication', () => {
   });
 
   // TODO: Add test for creation of Employee (check UserRole of Company Administrator)
-});
+});*/
