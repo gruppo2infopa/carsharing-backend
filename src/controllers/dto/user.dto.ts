@@ -1,8 +1,5 @@
 import { CreditCard } from '../../models/credit-card.model';
-import {
-  DriverLicense,
-  DriverLicenseType,
-} from '../../models/driver-license.model';
+import { DriverLicense } from '../../models/driver-license.model';
 import { UserRole } from '../../models/user.model';
 
 export class UserDetails {

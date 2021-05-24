@@ -8,6 +8,7 @@ import { AuthRouter } from './controllers/auth.controller';
 import { BookingRouter } from './controllers/booking.controller';
 import { VehicleRouter } from './controllers/vehicle.controller';
 import { errorHandler } from './middlewares/error.handler';
+import fileUpload from 'express-fileupload';
 
 const app = express();
 
@@ -16,6 +17,18 @@ dotenv.config();
 app.use(json());
 app.use(cors());
 app.use(cookieParser());
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/',
+    preserveExtension: 4,
+    abortOnLimit: true,
+    responseOnLimit: 'File size limit has been reached (max 10 Mb)',
+    limits: { fileSize: 10 * 1024 * 1024 },
+    uploadTimeout: 60000,
+    debug: true,
+  })
+);
 
 // Routers
 app.use('/auth', AuthRouter);

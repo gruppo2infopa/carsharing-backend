@@ -19,9 +19,6 @@ export class DriverLicense {
   @Column('date')
   expiryDate: Date;
 
-  @Column()
-  img: string; //path of the image
-
   @ManyToMany(() => DriverLicenseType, {
     cascade: true,
   })
