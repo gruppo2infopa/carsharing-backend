@@ -55,9 +55,8 @@ class UserService {
     const user: User | undefined = await this.userRepository.findOne(email);
     if (user === undefined) throw new NotFoundError('User not found');
 
-    // TODO: decommentare
-    // if (!user.hasVerifiedEmail)
-    //   throw new BadRequestError('You must confirm your email');
+    if (!user.hasVerifiedEmail)
+      throw new BadRequestError('You must confirm your email');
 
     const areEqual = await comparePasswords(password, user.password);
     if (!areEqual) throw new UnauthorizedError('Invalid user credentials');

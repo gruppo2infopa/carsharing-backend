@@ -26,6 +26,8 @@ import { CreditCardRepository } from '../repositories/credit-card.repository';
 import { UserRepository } from '../repositories/user.repository';
 import { VehicleRepository } from '../repositories/vehicle.repository';
 import RandomString from 'randomstring';
+import { Requirement, VehicleType } from '../models/vehicle-model.model';
+import { DriverLicenseType } from '../models/driver-license.model';
 
 class BookingService {
   private bookingRepository = getCustomRepository(BookingRepository);
@@ -141,6 +143,20 @@ class BookingService {
       throw new NotFoundError('Vehicle not found');
     }
 
+    const user = await this.userRepository.findOne(userEmail);
+    const requiredLicense: DriverLicenseType[] = Requirement.getRequirement(
+      vehicle.vehicleModel
+    ).requiredDriverLicenseTypes;
+
+    let canDrive: boolean = false;
+    for (let category of user?.driverLicense?.categories!)
+      if (requiredLicense.includes(category)) {
+        canDrive = true;
+        break;
+      }
+
+    if (!canDrive) throw new BadRequestError('You cannot drive this vehicle');
+
     booking.vehicle = vehicle;
     await this.bookingRepository.save(booking);
 
@@ -158,7 +174,6 @@ class BookingService {
       return totalPrice * 0.625;
     }
 
-    // TODO: controllare i requisiti del veicolo
     return totalPrice;
   }
 

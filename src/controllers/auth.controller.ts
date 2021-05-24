@@ -8,7 +8,6 @@ import { body } from 'express-validator';
 import { validateRequest } from '../middlewares/validate-request.handler';
 import { requireAuth } from '../middlewares/require-auth.handler';
 
-// TODO: estrarre in un modulo a parte?
 const COOKIE_NAME: string = 'jwt_encoded';
 const TOKEN_MAX_AGE: number = 4 * 60 * 60 * 1000; // 4h
 
