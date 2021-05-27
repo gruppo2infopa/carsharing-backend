@@ -21,7 +21,6 @@ class Notification {
 
 enum NotificationReply {
   TRAFFIC = 'TRAFFIC',
-  MALFUNCTION = 'MALFUNCTION',
   OTHER = 'OTHER',
 }
 

@@ -22,6 +22,7 @@ function setResponseToken(res: Response, tokenPayload: object) {
 }
 const router = Router();
 
+//signupCustomer
 router.post(
   '/signup',
   [
@@ -55,7 +56,7 @@ router.post(
     res.status(201).send({});
   }
 );
-
+//signupEmployee
 router.post(
   '/signup/employee',
   [
@@ -92,7 +93,7 @@ router.post(
     res.status(201).send({});
   }
 );
-
+//signin
 router.post(
   '/signin',
   [
@@ -111,7 +112,7 @@ router.post(
     res.status(200).send({});
   }
 );
-
+//signout
 router.post('/signout', async (req: Request, res: Response) => {
   res.clearCookie(COOKIE_NAME);
   res.status(200).send({});

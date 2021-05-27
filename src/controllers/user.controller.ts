@@ -13,6 +13,7 @@ import { multipartParse } from '../middlewares/multipart.handler';
 
 const router = Router();
 
+//updateUserInfo
 router.put(
   '/update',
   multipartParse('data'),
@@ -71,6 +72,7 @@ router.put(
   }
 );
 
+//unlinkCreditCard
 router.put(
   '/unlink/:id',
   requireAuth(),
@@ -82,6 +84,8 @@ router.put(
     res.status(200).send({});
   }
 );
+
+//getCreditCards
 router.get(
   '/creditCards',
   requireAuth(),
