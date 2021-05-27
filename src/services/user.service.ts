@@ -130,6 +130,18 @@ class UserService {
 
     return user.creditCards;
   }
+
+  async getPersonalInfo(email: string): Promise<User> {
+    const user = await this.userRepository.findOne(email, {
+      relations: ['creditCards', 'driverLicense'],
+    });
+
+    if (user === undefined) {
+      throw new NotFoundError('User not found');
+    }
+
+    return user;
+  }
 }
 
 export const userService = new UserService();

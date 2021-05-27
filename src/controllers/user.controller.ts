@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { requireAuth } from '../middlewares/require-auth.handler';
-import { UpdateUserDto } from './dto/user.dto';
+import { UpdateUserDto, UserInfoDto } from './dto/user.dto';
 import { userService } from '../services/user.service';
-import { UserRole } from '../models/user.model';
+import { User, UserRole } from '../models/user.model';
 import { NotificationDto } from './dto/notification.dto';
 import { BadRequestError } from '../errors/bad-request.error';
 import { saveUserFile, deleteUserFile } from '../utils/file';
@@ -22,15 +22,19 @@ router.put(
       .isMobilePhone(['it-IT', 'en-US'])
       .withMessage('Phone number must be correct'),
     body('data.driverLicense.issueDate')
+      .if(body('data.driverLicense').exists())
       .isDate()
       .withMessage('issueDate must be valid'),
     body('data.driverLicense.expiryDate')
+      .if(body('data.driverLicense').exists())
       .isDate()
       .withMessage('expiryDate must be valid'),
     body('data.driverLicense.categories')
+      .if(body('data.driverLicense').exists())
       .isArray({ min: 1 })
       .withMessage('at lest one category must be specified'),
     body('data.driverLicense.categories.*.name')
+      .if(body('data.driverLicense').exists())
       .isIn(['AM', 'A1', 'A2', 'A', 'B'])
       .withMessage(
         `license type must be one of ${['AM', 'A1', 'A2', 'A', 'B']}`
@@ -40,6 +44,8 @@ router.put(
   async (req: Request, res: Response) => {
     const updateUserDto: UpdateUserDto = req.body.data;
     const { email } = req.userToken!;
+
+    console.log(updateUserDto);
 
     if (updateUserDto.driverLicense != undefined) {
       if (req.files?.driverLicenseImage != undefined) {
@@ -109,5 +115,12 @@ router.get(
       );
   }
 );
+router.get('/', requireAuth(), async (req: Request, res: Response) => {
+  const { email } = req.userToken!;
+
+  const user = await userService.getPersonalInfo(email);
+
+  res.status(200).send(UserInfoDto.fromEntity(user));
+});
 
 export { router as UserRouter };
