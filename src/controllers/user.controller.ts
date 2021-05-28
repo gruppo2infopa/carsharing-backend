@@ -21,6 +21,7 @@ router.put(
   [
     body('data.phoneNumber')
       .isMobilePhone(['it-IT', 'en-US'])
+      .optional({ nullable: true })
       .withMessage('Phone number must be correct'),
     body('data.driverLicense.issueDate')
       .if(body('data.driverLicense').exists())
