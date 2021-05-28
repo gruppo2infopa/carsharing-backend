@@ -97,7 +97,7 @@ router.get(
     res.status(200).send(creditCards);
   }
 );
-
+//getNotifications
 router.get(
   '/notifications',
   requireAuth([
@@ -120,6 +120,8 @@ router.get(
       );
   }
 );
+
+//getUserInfo
 router.get('/', requireAuth(), async (req: Request, res: Response) => {
   const { email } = req.userToken!;
 
