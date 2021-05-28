@@ -28,6 +28,7 @@ router.post(
 
     rentService.endRent(role, email, endRentDto);
     res.status(200).send('Rent ended successfuly');
+  }
 );
 
 router.post('/notifyproblem', requireAuth([UserRole.CUSTOMER]));

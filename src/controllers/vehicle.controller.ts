@@ -17,6 +17,7 @@ import { Vehicle } from '../models/vehicle.model';
 
 const router = Router();
 
+//getVehicleModelList
 router.get(
   '/models',
   requireAuth([
@@ -53,6 +54,7 @@ const vehicleModelValidator = [
   body('price').isNumeric().withMessage('You must specify a correct price.'),
 ];
 
+//registerVehicleModel
 router.post(
   '/models',
   requireAuth([UserRole.COMPANY_ADMINISTRATOR]),
@@ -67,6 +69,7 @@ router.post(
   }
 );
 
+//getVehicleModelById
 router.get(
   '/models/:vehicleModelId',
   requireAuth([
@@ -84,7 +87,7 @@ router.get(
   }
 );
 
-// update vehicle model
+// updateVehicleModel
 router.put(
   '/models/:vehicleModelId',
   requireAuth([UserRole.COMPANY_ADMINISTRATOR]),
@@ -101,6 +104,7 @@ router.put(
   }
 );
 
+//deleteVehicleModel
 router.delete(
   '/models/:vehicleModelId',
   requireAuth([UserRole.COMPANY_ADMINISTRATOR]),
@@ -113,6 +117,7 @@ router.delete(
   }
 );
 
+//getVehicleList
 router.get(
   '/',
   requireAuth([
@@ -151,6 +156,7 @@ const vehicleRequestValidator = [
     ),
 ];
 
+//registerVehicle
 router.post(
   '/',
   requireAuth([UserRole.COMPANY_ADMINISTRATOR]),
@@ -166,6 +172,7 @@ router.post(
   }
 );
 
+//getVehicleById
 router.get(
   '/:vehicleId',
   requireAuth([
@@ -183,6 +190,7 @@ router.get(
   }
 );
 
+//updateVehicle
 router.put(
   '/:vehicleId',
   vehicleRequestValidator,
@@ -198,6 +206,7 @@ router.put(
   }
 );
 
+//deleteVehicle
 router.delete(
   '/:vehicleId',
   requireAuth([UserRole.COMPANY_ADMINISTRATOR]),
