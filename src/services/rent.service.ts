@@ -6,9 +6,12 @@ import { Booking } from '../models/booking.model';
 import { Payment } from '../models/payment.model';
 import { UserRole } from '../models/user.model';
 import { BookingRepository } from '../repositories/booking.repository';
+import { NotificationRepository } from '../repositories/notification.repository';
+import { Notification } from '../models/notification.model';
 
 class RentService {
   bookingRepository: BookingRepository = getRepository(Booking);
+  notificationRepository: NotificationRepository = getRepository(Notification);
 
   async startRent(
     userRole: UserRole,
@@ -68,8 +71,8 @@ class RentService {
   async notifyProblem(
     updateRentDto: UpdateRentDto,
     userEmail: string,
-    bookingId: number
   ) {
+    const bookingId = updateRentDto.bookingId;
     const existingBooking = await this.bookingRepository.findOne({
       relations: ['user'],
       where: {
@@ -82,6 +85,17 @@ class RentService {
 
     if (existingBooking.user.email != userEmail)
       throw new UnauthorizedError('User Unathorized');
+
+    existingBooking.endDate = updateRentDto.expectedEndDate;
+    existingBooking.finalDestination = updateRentDto.newFinalDestination;
+    this.bookingRepository.save(existingBooking);
+    const notification: Notification = {
+      message: updateRentDto.problemDescription,
+      issueDate: new Date(),
+      isRead: false,
+      user: existingBooking.user
+    };
+    return this.notificationRepository.save(notification)
   }
 }
 

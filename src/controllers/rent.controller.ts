@@ -3,7 +3,7 @@ import { Router, Request, Response } from 'express';
 import { requireAuth } from '../middlewares/require-auth.handler';
 import { UserRole } from '../models/user.model';
 import { rentService } from '../services/rent.service';
-import { RentDto } from './dto/rent.dto';
+import { RentDto, UpdateRentDto } from './dto/rent.dto';
 
 const router = Router();
 
@@ -31,6 +31,15 @@ router.post(
   }
 );
 
-router.post('/notifyproblem', requireAuth([UserRole.CUSTOMER]));
+router.post(
+  '/notifyproblem', 
+  requireAuth([UserRole.CUSTOMER]),
+  async (req: Request, res: Response) => {
+    const updateRentDto: UpdateRentDto = req.body;
+    const { email, role } = req.userToken!;
+    rentService.notifyProblem(updateRentDto, email);
+    res.status(201).send({});
+  }  
+);
 
 export { router as RentRouter };

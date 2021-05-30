@@ -4,7 +4,7 @@ import { User } from './user.model';
 @Entity()
 class Notification {
   @PrimaryGeneratedColumn()
-  id: Number;
+  id?: Number;
 
   @ManyToOne(() => User, (user) => user.notification)
   user: User;
