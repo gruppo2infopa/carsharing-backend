@@ -100,12 +100,7 @@ router.get(
 //getNotifications
 router.get(
   '/notifications',
-  requireAuth([
-    UserRole.CUSTOMER,
-    UserRole.ATTENDANT,
-    UserRole.COMPANY_ADMINISTRATOR,
-    UserRole.DRIVER,
-  ]),
+  requireAuth([UserRole.COMPANY_ADMINISTRATOR]),
   async (req: Request, res: Response) => {
     const notifications = await userService.getNotifications(
       req.userToken!.email
