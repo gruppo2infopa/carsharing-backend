@@ -26,7 +26,7 @@ app.use(
     responseOnLimit: 'File size limit has been reached (max 10 Mb)',
     limits: { fileSize: 10 * 1024 * 1024 },
     uploadTimeout: 60000,
-    debug: true,
+    debug: false,
   })
 );
 
