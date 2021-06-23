@@ -143,18 +143,23 @@ class BookingService {
       throw new NotFoundError('Vehicle not found');
     }
 
-    const user = await this.userRepository.findOne(userEmail);
+    const user = await this.userRepository.findOne(userEmail, {
+      relations: ['driverLicense', 'driverLicense.categories'],
+    });
     const requiredLicense: DriverLicenseType[] = Requirement.getRequirement(
       vehicle.vehicleModel
     ).requiredDriverLicenseTypes;
 
     let canDrive: boolean = false;
-    for (let category of user?.driverLicense?.categories!)
-      if (requiredLicense.includes(category)) {
-        canDrive = true;
-        break;
+    if (user?.driverLicense?.categories!) {
+      for (let category of user?.driverLicense?.categories.map((c) => c.name)) {
+        console.log(category);
+        if (requiredLicense.map((license) => license.name).includes(category)) {
+          canDrive = true;
+          break;
+        }
       }
-
+    }
     if (!canDrive) throw new BadRequestError('You cannot drive this vehicle');
 
     booking.vehicle = vehicle;
