@@ -13,6 +13,7 @@ export class ResponseBookingSummaryDto {
   rentType: RentType;
   vehicle: Vehicle;
   state: String;
+  id: number;
 
   static fromEntity(booking: Booking): ResponseBookingSummaryDto {
     return {
@@ -22,7 +23,8 @@ export class ResponseBookingSummaryDto {
       finalDestination: booking.finalDestination,
       rentType: booking.rentType,
       vehicle: booking.vehicle,
-      state: booking.state
+      state: booking.state,
+      id: booking.id,
     };
   }
 }

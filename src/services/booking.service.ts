@@ -247,6 +247,19 @@ class BookingService {
       relations: ['vehicle', 'vehicle.vehicleModel'],
     });
   }
+
+  async getBooking(
+    userEmail: string,
+    id: number
+  ): Promise<Booking | undefined> {
+    return this.bookingRepository.findOne({
+      where: {
+        user: userEmail,
+        id,
+      },
+      relations: ['vehicle', 'vehicle.vehicleModel'],
+    });
+  }
 }
 
 export const bookingService = new BookingService();

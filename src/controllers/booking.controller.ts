@@ -78,6 +78,24 @@ router.put(
   }
 );
 
+router.get(
+  '/:id',
+  requireAuth(),
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.userToken!;
+    const { id } = req.params;
+
+    // restituire tutti i booking
+    const booking: Booking | undefined = await bookingService.getBooking(
+      email,
+      parseInt(id)
+    );
+    if (booking)
+      res.status(200).send(ResponseBookingSummaryDto.fromEntity(booking!));
+    else res.status(404).send({});
+  }
+);
+
 // get bookings
 router.get(
   '/',
