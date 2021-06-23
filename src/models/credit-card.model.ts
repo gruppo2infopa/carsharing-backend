@@ -17,6 +17,9 @@ export class CreditCard {
   user?: User;
 
   @Column()
+  cvv: String;
+
+  @Column()
   expiryDate: Date;
 
   @OneToMany(() => Payment, (payment) => payment.creditCard)

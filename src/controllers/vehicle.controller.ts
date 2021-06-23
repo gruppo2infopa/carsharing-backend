@@ -62,6 +62,7 @@ router.post(
   validateRequest,
   async (req: Request, res: Response) => {
     const vehicleModelDto: CreateVehicleModelDto = req.body;
+    console.log(vehicleModelDto);
     const vehicleModel: VehicleModel =
       await vehicleService.registerVehicleModel(vehicleModelDto);
 

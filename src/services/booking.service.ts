@@ -160,6 +160,12 @@ class BookingService {
         }
       }
     }
+
+    console.log(requiredLicense);
+    if (requiredLicense.length === 0) {
+      canDrive = true;
+    }
+
     if (!canDrive) throw new BadRequestError('You cannot drive this vehicle');
 
     booking.vehicle = vehicle;
@@ -259,6 +265,52 @@ class BookingService {
       },
       relations: ['vehicle', 'vehicle.vehicleModel'],
     });
+  }
+
+  async getAvailableVehicles(
+    userEmail: string,
+    bookingId: number
+  ): Promise<Vehicle[]> {
+    const booking = await this.bookingRepository.findOne(bookingId);
+    if (!booking) {
+      throw new NotFoundError('Booking not found');
+    }
+
+    const { startDate, endDate } = booking;
+
+    const bookedVehicles: number[] = (
+      await this.bookingRepository.find({
+        where: [
+          {
+            startDate: Between(startDate, endDate),
+            endDate: Between(startDate, endDate),
+            vehicle: Not(null),
+          },
+          {
+            startDate: LessThanOrEqual(startDate),
+            endDate: MoreThanOrEqual(startDate),
+            vehicle: Not(null),
+          },
+          {
+            startDate: LessThanOrEqual(endDate),
+            endDate: MoreThanOrEqual(endDate),
+            vehicle: Not(null),
+          },
+        ],
+        relations: ['vehicle'],
+      })
+    ).map((booking) => booking.vehicle.id);
+
+    const vehicles: Vehicle[] = await this.vehicleRepository.find({
+      where: {
+        id: Not(In(bookedVehicles)),
+      },
+      relations: ['vehicleModel'],
+    });
+
+    console.log(vehicles);
+
+    return vehicles;
   }
 }
 

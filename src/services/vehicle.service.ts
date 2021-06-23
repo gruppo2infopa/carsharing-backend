@@ -30,6 +30,9 @@ class VehicleService {
     if (existingVehicleModel != undefined)
       throw new BadRequestError('Vehicle model already registered');
 
+    if (dto.type === 'BIKE' || dto.type === 'ELECTRICAL_SCOOTER') {
+      delete dto.displacement;
+    }
     return await this.vehicleModelRepository.save({
       ...dto,
       vehicleType: <VehicleType>dto.type,

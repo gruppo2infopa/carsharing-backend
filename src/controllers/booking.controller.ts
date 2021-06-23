@@ -9,6 +9,7 @@ import {
   UpdateBookingWithVehicleDto,
 } from './dto/booking.dto';
 import { Booking } from '../models/booking.model';
+import { ResponseVehicleDto } from './dto/vehicle.dto';
 
 const router = Router();
 
@@ -106,6 +107,22 @@ router.get(
     // restituire tutti i booking
     const bookings: Booking[] = await bookingService.getBookings(email);
     res.status(200).send(bookings.map(ResponseBookingSummaryDto.fromEntity));
+  }
+);
+
+router.get(
+  '/:id/availableVehicles',
+  requireAuth(),
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.userToken!;
+    const { id } = req.params;
+
+    const availableVehicles = await bookingService.getAvailableVehicles(
+      email,
+      parseInt(id)
+    );
+
+    res.status(200).send(availableVehicles.map(ResponseVehicleDto.fromEntity));
   }
 );
 
