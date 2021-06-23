@@ -4,6 +4,7 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
+    "start": "nodemon",
     "test": "jest --watch --no-cache",
     "dev": "tsnd --watch 'src/**/*.ts' src/index.ts",
     "prod": "SET NODE_ENV=production && nodemon"
