@@ -20,7 +20,7 @@ class RentService {
     startRentDto: RentDto
   ) {
     const existingBooking = await this.bookingRepository.findOne({
-      relations: ['user'],
+      relations: ['user', 'vehicle'],
       where: {
         id: startRentDto.bookingId,
       },
@@ -29,10 +29,12 @@ class RentService {
     if (existingBooking == undefined)
       throw new NotFoundError('Booking not found');
 
-    if(existingBooking.vehicle.url !== startRentDto.vehicleUrl)
-      throw new BadRequestError('The URL is not of the vehicle you are trying to drive!');
+    if (existingBooking.vehicle.url !== startRentDto.vehicleUrl)
+      throw new BadRequestError(
+        'The URL is not of the vehicle you are trying to drive!'
+      );
 
-    if(existingBooking.unlockCode !== startRentDto.unlockCode)
+    if (existingBooking.unlockCode !== startRentDto.unlockCode)
       throw new BadRequestError('Invalid Unlock Code');
 
     if (
@@ -48,14 +50,17 @@ class RentService {
   async endRent(
     userRole: UserRole,
     userEmail: string,
-    endRentDto: RentDto
+    // endRentDto: RentDto
+    bookingId: number
   ): Promise<Booking> {
     const existingBooking = await this.bookingRepository.findOne({
       relations: ['user'],
       where: {
-        id: endRentDto.bookingId,
+        id: bookingId,
       },
     });
+
+    console.log('in');
 
     if (existingBooking == undefined)
       throw new NotFoundError('Booking not found');
@@ -75,10 +80,7 @@ class RentService {
     return this.bookingRepository.save(existingBooking);
   }
 
-  async notifyProblem(
-    updateRentDto: UpdateRentDto,
-    userEmail: string,
-  ) {
+  async notifyProblem(updateRentDto: UpdateRentDto, userEmail: string) {
     const bookingId = updateRentDto.bookingId;
     const existingBooking = await this.bookingRepository.findOne({
       relations: ['user'],
@@ -100,9 +102,9 @@ class RentService {
       message: updateRentDto.problemDescription,
       issueDate: new Date(),
       isRead: false,
-      user: existingBooking.user
+      user: existingBooking.user,
     };
-    return this.notificationRepository.save(notification)
+    return this.notificationRepository.save(notification);
   }
 }
 

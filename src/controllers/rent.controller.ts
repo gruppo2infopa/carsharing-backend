@@ -19,26 +19,27 @@ router.post(
 );
 
 router.post(
-  '/endrent',
+  '/endrent/:id',
   requireAuth([UserRole.CUSTOMER, UserRole.ATTENDANT, UserRole.DRIVER]),
   async (req: Request, res: Response) => {
-    const endRentDto: RentDto = req.body;
+    // const endRentDto: RentDto = req.body;
     const { email, role } = req.userToken!;
+    const { id } = req.params;
 
-    rentService.endRent(role, email, endRentDto);
+    rentService.endRent(role, email, parseInt(id));
     res.status(200).send('Rent ended successfuly');
   }
 );
 
 router.post(
-  '/notifyproblem', 
+  '/notifyproblem',
   requireAuth([UserRole.CUSTOMER]),
   async (req: Request, res: Response) => {
     const updateRentDto: UpdateRentDto = req.body;
     const { email, role } = req.userToken!;
     rentService.notifyProblem(updateRentDto, email);
     res.status(201).send({});
-  }  
+  }
 );
 
 export { router as RentRouter };

@@ -232,6 +232,7 @@ class BookingService {
       capitalization: 'uppercase',
       length: 5,
     });
+    booking.state = BookingState.ACCEPTED;
     return this.bookingRepository.save(booking);
   }
 

@@ -6,6 +6,8 @@ import { CreateCreditCardDto } from './credit-card.dto';
 import { ResponseVehicleDto } from './vehicle.dto';
 
 export class ResponseBookingSummaryDto {
+  startRent?: Date;
+  endRent?: Date;
   startDate: Date;
   endDate: Date;
   unlockCode?: string;
@@ -17,6 +19,8 @@ export class ResponseBookingSummaryDto {
 
   static fromEntity(booking: Booking): ResponseBookingSummaryDto {
     return {
+      startRent: booking.startRent,
+      endRent: booking.endRent,
       startDate: booking.startDate,
       endDate: booking.endDate,
       unlockCode: booking.unlockCode,
