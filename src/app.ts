@@ -9,6 +9,7 @@ import { BookingRouter } from './controllers/booking.controller';
 import { VehicleRouter } from './controllers/vehicle.controller';
 import { errorHandler } from './middlewares/error.handler';
 import fileUpload from 'express-fileupload';
+import { RentRouter } from './controllers/rent.controller';
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use('/auth', AuthRouter);
 app.use('/bookings', BookingRouter);
 app.use('/vehicles', VehicleRouter);
 app.use('/me', UserRouter);
+app.use('/rent', RentRouter);
 
 // Middlewares
 app.use(errorHandler);

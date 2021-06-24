@@ -6,6 +6,7 @@ export class UpdateRentDto {
 }
 
 export class RentDto {
+  vehicleUrl: string;
   unlockCode?: string;
   bookingId: number;
 }

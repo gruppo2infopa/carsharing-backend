@@ -13,7 +13,6 @@ router.post(
   async (req: Request, res: Response) => {
     const startRentDto: RentDto = req.body;
     const { email, role } = req.userToken!;
-
     rentService.startRent(role, email, startRentDto);
     res.status(200).send('Rent started successfuly');
   }

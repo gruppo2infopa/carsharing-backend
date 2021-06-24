@@ -8,6 +8,7 @@ import { UserRole } from '../models/user.model';
 import { BookingRepository } from '../repositories/booking.repository';
 import { NotificationRepository } from '../repositories/notification.repository';
 import { Notification } from '../models/notification.model';
+import { BadRequestError } from '../errors/bad-request.error';
 
 class RentService {
   bookingRepository: BookingRepository = getRepository(Booking);
@@ -27,6 +28,12 @@ class RentService {
 
     if (existingBooking == undefined)
       throw new NotFoundError('Booking not found');
+
+    if(existingBooking.vehicle.url !== startRentDto.vehicleUrl)
+      throw new BadRequestError('The URL is not of the vehicle you are trying to drive!');
+
+    if(existingBooking.unlockCode !== startRentDto.unlockCode)
+      throw new BadRequestError('Invalid Unlock Code');
 
     if (
       userRole == UserRole.CUSTOMER &&
